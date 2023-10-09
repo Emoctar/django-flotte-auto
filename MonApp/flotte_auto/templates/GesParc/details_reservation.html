@@ -1,0 +1,98 @@
+{% extends 'GesParc/home_gesparc.html' %}
+{%load static%}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Informations du demandeur -->
+        <div class="col-md-4">
+            <div class="card mt-3">
+                <img src="{{ demandeur.sphoto.url }}" class="card-img-top" alt="{{ reservation.employe.nom }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ reservation.employe.nom }}</h5>
+                    <p class="card-text">{{ reservation.employe.poste }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Détails de la réservation -->
+        <div class="col-md-8">
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Détails de la réservation</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Date de début : {{ reservation.date_debut }}</li>
+                        <li class="list-group-item">Date de fin : {{ reservation.date_fin }}</li>
+                        <li class="list-group-item">Destination : {{ reservation.destination }}</li>
+                        <li class="list-group-item">Motif : {{ reservation.motif }}</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Tableau des véhicules réservés -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Véhicules réservés</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Marque</th>
+                                <th>Modèle</th>
+                                <th>Plaque d'immatriculation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if vehicules_reserves %}
+                                {% for vehicule in vehicules_reserves %}
+                                    <tr>
+                                        <td>{{ vehicule.marque }}</td>
+                                        <td>{{ vehicule.modele }}</td>
+                                        <td>{{ vehicule.plaque }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">Aucun véhicule réservé</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Boutons pour Accepter, Refuser et Télécharger au format PDF -->
+            <div class="mt-3">
+                <button id="accepter-reservation" class="btn btn-success">
+                    <i class="fas fa-check"></i> Accepter
+                </button>
+                <button id="refuser-reservation" class="btn btn-danger ml-2">
+                    <i class="fas fa-times"></i> Refuser
+                </button>
+                <button id="telecharger-pdf" class="btn btn-info ml-2">
+                    <i class="fas fa-file-pdf"></i> Télécharger au format PDF
+                </button>
+                <a href="{% url 'gerer_reservations_attente' %}" class="btn btn-secondary ml-2">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+    document.getElementById('telecharger-pdf').addEventListener('click', function() {
+        // Logique pour générer et télécharger le PDF (voir le code précédent)
+        // ...
+    });
+
+    document.getElementById('accepter-reservation').addEventListener('click', function() {
+        // Logique pour accepter la réservation (par exemple, envoi de notification)
+        // ...
+    });
+
+    document.getElementById('refuser-reservation').addEventListener('click', function() {
+        // Logique pour refuser la réservation (par exemple, envoi de notification)
+        // ...
+    });
+</script>
+{% endblock %}

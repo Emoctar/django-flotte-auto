@@ -1,0 +1,10 @@
+<!-- confirmation_validation.html -->
+{% extends 'GesParc/home_gesparc.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Réservation validée avec succès !</h1>
+  <p>Merci d'avoir validé cette réservation. Les détails de la réservation ont été envoyés à l'employé.</p>
+  <a href="{% url 'gerer_reservations_attente' %}" class="btn btn-primary">Retour à la gestion des réservations</a>
+</div>
+{% endblock %}

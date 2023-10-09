@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'flotte_auto',
+    'usersapp',
+    'sql_server.pyodbc',
+    
+    
 ]
 
 MIDDLEWARE = [
@@ -69,20 +73,51 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "MonApp.wsgi.application"
+#Authentification
+
+
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'maflotte',
-       'USER': 'postgres',
-       'PASSWORD': 'Redefere72',
-       'HOST': 'localhost',
-       'PORT': '5432',
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'flotte_auto',
+        'USER': 'admin',
+        'PASSWORD': 'Redefere72',
+        'HOST': 'localhost',  # ou l'adresse de votre serveur PostgreSQL
+        'PORT': '5432',  # Laissez vide pour utiliser le port par défaut (5432)
+    }
+}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'sql_server.pyodbc',
+#         'NAME': 'flotte_auto',
+#         'USER': 'Admin',
+#         'PASSWORD': 'Redefere72',
+#         'HOST': 'MOCTAR\EMD_SERVER',  # Remplacez par le nom ou l'adresse IP de votre serveur SQL Server
+#         'PORT': '1433',           # Laissez vide pour utiliser le port par défaut (généralement 1433)
+#         'OPTIONS': {
+#             'driver': 'ODBC Driver 17 for SQL Server',  # Remplacez 'xx' par la version de votre pilote
+#         },
+#     }
+    
+# }
+
+
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",  # Adresse du serveur Redis
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 
 # Password validation
@@ -104,10 +139,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "fr-fr"
 
 TIME_ZONE = "UTC"
 
@@ -127,8 +165,53 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+import redis
+
+# Configuration de Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Exemple avec Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Exemple avec Redis
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Configuration de Celery Beat
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    'mettre-a-jour-statut-vehicules': {
+        'task': 'flotte_auto.tasks.mettre_a_jour_statut_vehicules_task',
+        'schedule': crontab(hour=0, minute=0),  # Exécutez tous les jours à minuit
+    },
+}
+CELERY_BEAT_SCHEDULE = {
+    'notifier-entretien-planifie': {
+        'task': 'flotte_auto.tasks.notifier_entretien_planifie',
+        'schedule': crontab(hour=8, minute=0),  # Exécutez tous les jours à 8h00
+    },
+}
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = 'home'
+# LOGOUT_REDIRECT_URL= 'login'
+
+# simuler l’envoi d’e-mail de réinitialisation de mot de passe sur console.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # Port SMTP de Gmail
+EMAIL_USE_TLS = True  # Utilisez TLS pour la sécurité
+EMAIL_HOST_USER = 'ehm.diallo3@gmail.com'  # Votre adresse e-mail Gmail
+EMAIL_HOST_PASSWORD = 'M0ct@r0945'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
+
+#######################################
+#API NOTIFICATION TWILIO
+
+VONAGE_API_KEY = 'beef8cb1'
+VONAGE_API_SECRET = 'rlGAZHXoE2O3fivE'
+VONAGE_PHONE_NUMBER = '+221781397254'
+

@@ -1,0 +1,17 @@
+<!-- gerer_reservations_attente.html -->
+{% extends 'GesParc/home_gesparc.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Gérer les réservations en attente</h1>
+  <ul>
+    {% for reservation in reservations_attente %}
+      <li>
+        <a href="{% url 'details_reservation' reservation.id %}">
+          {{ reservation.destination }} - {{ reservation.date_debut|date:"D d M Y H:i" }}
+        </a>
+        <a href="{% url 'details_reservation' reservation.id %}" class="btn btn-info btn-sm">Détails</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

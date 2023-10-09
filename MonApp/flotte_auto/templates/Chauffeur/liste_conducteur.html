@@ -1,0 +1,80 @@
+{% extends 'GesParc/home_gesparc.html' %}
+{% load static %}
+
+{% block content %}
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Contacts</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- row -->
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+
+                <div class="white_shd full margin_bottom_30">
+                    <div class="full graph_head">
+                        <div class="heading1 margin_0">
+                            <h2>Details Conducteurs</h2>
+                        </div>
+                    </div>
+                    <br>
+                    
+                        
+
+    
+                        <div class="row justify-content-center">
+                            {% for conducteur in conducteurs %}
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 profile_details margin_bottom_30">
+                                <div class="contact_blog">
+                                    <h4 class="brief">Conducteur numero : {{conducteur.id}}</h4>
+                                    <div class="contact_inner">
+                                        <div class="left">
+                                            <h3>{{ conducteur.nom }} {{ conducteur.prenom }}</h3>
+                                            <p><strong>Numero Permis: </strong>{{ conducteur.numero_permis_conduire }}</p>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fa-solid fa-calendar-days"></i> : {{ conducteur.horaires_travail }}</li>
+                                                <li><i class="fa fa-phone"></i> : {{ conducteur.telephone }}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="right">
+                                            <div class="profile_contacts">
+                                                <img class="img-responsive" src="{{conducteur.photo.url}}" alt="#" />
+                                            </div>
+                                        </div>
+                                        <div class="bottom_list">
+                                            <div class="left_rating">
+                                                <p class="ratings">
+                                                    <a href="#"><span class="fa fa-star"></span></a>
+                                                    <a href="#"><span class="fa fa-star"></span></a>
+                                                    <a href="#"><span class="fa fa-star"></span></a>
+                                                    <a href="#"><span class="fa fa-star"></span></a>
+                                                    <a href="#"><span class="fa fa-star-o"></span></a>
+                                                </p>
+                                            </div>
+                                            <div class="right_button">
+                                                <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user"></i> <i class="fa fa-comments-o"></i> </button>
+                                                <a href="{% url 'modifier_conducteur' conducteur.id %}" class="btn btn-success btn-xs">
+                                                    <i class="fa fa-pencil"></i> Modifier
+                                                </a>
+                                            
+                                                <a href="{% url 'supprimer_conducteur' conducteur.id %}" class="btn btn-danger btn-xs" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce conducteur ?')">
+                                                    <i class="fa fa-trash"></i> Supprimer
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+</div>
+{% endblock %}

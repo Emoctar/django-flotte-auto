@@ -1,0 +1,117 @@
+{% extends 'GesParc/home_gesparc.html' %}
+{% load static %}
+
+{% block content %}
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Ajouter Véhicule</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="add-vehicle-form white_shd">
+                    <h1>Ajouter un nouveau véhicule</h1>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.marque.id_for_label }}">Marque :</label>
+                                {{ form.marque }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.modele.id_for_label }}">Modèle :</label>
+                                {{ form.modele }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.annee_fabrication.id_for_label }}">Année de fabrication :</label>
+                                {{ form.annee_fabrication }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.kilometrage.id_for_label }}">Kilométrage :</label>
+                                {{ form.kilometrage }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.numéro_immatriculation.id_for_label }}">Numéro de plaque :</label>
+                                {{ form.numéro_immatriculation }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.typeCarburant.id_for_label }}">Carburant :</label>
+                                {{ form.typeCarburant }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.photo.id_for_label }}">Photo du véhicule :</label>
+                                {{ form.photo }}
+                            </div>
+                            <!-- Ajoutez d'autres champs de formulaire de la même manière -->
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                    <div class="text-center">
+                        <a href="{% url 'liste_vehicules' %}" class="btn btn-secondary">Retour à la liste des véhicules</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styles pour le formulaire */
+    .add-vehicle-form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .add-vehicle-form h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Styles pour les étiquettes de formulaire */
+    .add-vehicle-form label {
+        font-weight: bold;
+    }
+
+    /* Styles pour les champs de formulaire */
+    .add-vehicle-form .form-group input[type="text"],
+    .add-vehicle-form .form-group input[type="number"],
+    .add-vehicle-form .form-group select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /* Styles pour le champ de fichier (input type="file") */
+    .add-vehicle-form .form-group input[type="file"] {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 15px;
+    }
+
+    /* Styles pour le bouton "Enregistrer" */
+    .add-vehicle-form .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+    }
+
+    /* Styles pour le bouton "Retour à la liste des véhicules" */
+    .add-vehicle-form .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "GesParc/home_GesParc.html" %}
+{%load static%}
+{%block content%}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Assurances</title>
+    <!-- Inclure Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="midde_cont">
+        <div class="container-fluid">
+            <div class="row column_title">
+                <div class="col-md-12">
+                    <div class="page_title">
+                        <h2>Gestion Assurance</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Formulaire de modification -->
+                    <div class="white_shd full margin_bottom_20">
+                        <div class="full graph_head">
+                            <div class="heading1 margin_0">
+                                <h2 >Gestion des Assurances pour {{ vehicule }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="full price_table padding_infor_info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                
+
+                                <!-- Formulaire pour ajouter une nouvelle assurance -->
+                                <form method="post" action="{% url 'ajouter_assurance' vehicule.id %}">
+                                    {% csrf_token %}
+                                    <div class="form-group mt-4">
+                                        <label for="compagnie_assurance">Compagnie d'assurance :</label>
+                                        <input type="text" class="form-control" id="compagnie_assurance" name="compagnie_assurance" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="numero_police">Numéro de police :</label>
+                                        <input type="text" class="form-control" id="numero_police" name="numero_police" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="date_debut">Date de début :</label>
+                                        <input type="date" class="form-control" id="date_debut" name="date_debut" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="date_fin">Date de fin :</label>
+                                        <input type="date" class="form-control" id="date_fin" name="date_fin" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="prime_annuelle">Prime annuelle :</label>
+                                        <input type="number" class="form-control" id="prime_annuelle" name="prime_annuelle" required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Ajouter Assurance</button>
+                                </form>
+
+                                <!-- Liste des assurances actives -->
+                                <h2 class="mt-5">Assurances Actives :</h2>
+                                <ul class="list-group">
+                                    {% for assurance in vehicule.assurances_actives %}
+                                        <li class="list-group-item">{{ assurance.compagnie_assurance }} ({{ assurance.date_debut }} - {{ assurance.date_fin }})</li>
+                                    {% empty %}
+                                        <li class="list-group-item">Aucune assurance active pour ce véhicule.</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+
+    <!-- Inclure Bootstrap JS (si nécessaire) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'GesIntervention/GesInterv_home.html' %}
+{%load static%}
+
+{% block content %}
+
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Espace Vehicules</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Formulaire de modification -->
+                <div class="white_shd full margin_bottom_30">
+                    <div class="full graph_head">
+                        <div class="heading1 margin_0">
+                            <h2>Liste des Maintenance</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="full price_table padding_infor_info">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        
+                        <table id="maintenanceTable" class="table table-striped">
+                        <!-- ... (code précédent) ... -->
+                            <thead>
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Véhicule</th>
+                                    <th>Date de Maintenance</th>
+                                    <th>Description</th>
+                                    <th>Coût</th>
+                                    <th>Prochaine Maintenance</th>
+                                    <th>Actions</th> <!-- Ajoutez cette colonne pour les actions -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for maintenance in maintenances %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ maintenance.vehicule }}</td>
+                                    <td>{{ maintenance.date_maintenance }}</td>
+                                    <td>{{ maintenance.description }}</td>
+                                    <td>{{ maintenance.cout }}</td>
+                                    <td>{{ maintenance.prochaine_maintenance }}</td>
+                                    <td>
+                                        <a href="{% url 'modifier_maintenance' maintenance.id %}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-info-circle"></i> 
+                                        </a>
+                                        <a href="{% url 'supprimer_maintenance' maintenance.id %}" class="btn btn-danger">
+                                            <i class="fas fa-trash"></i> 
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#maintenanceTable').DataTable({
+            "paging": true,
+            "pageLength": 10, // Nombre d'éléments par page
+            "searching": true, // Activation de la recherche
+            "info": true // Affichage des informations de pagination
+        });
+    });
+</script>
+{% endblock %}

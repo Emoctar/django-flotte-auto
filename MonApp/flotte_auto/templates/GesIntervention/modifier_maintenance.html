@@ -1,0 +1,28 @@
+{% extends 'GesIntervention/GesInterv_home.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Modifier la Maintenance</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Modifier Maintenance</button>
+    </form>
+</div>
+
+{% if toastr_message %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "timeOut": 3000
+    };
+
+    var toastrData = {{ toastr_message|safe }};
+    toastr[toastrData.type](toastrData.message);
+</script>
+{% endif %}
+{% endblock %}

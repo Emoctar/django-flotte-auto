@@ -1,0 +1,30 @@
+{% extends 'Employe/home_emp.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Noter le conducteur {{ conducteur.nom }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="star-container"></div> <!-- Étoiles interactives -->
+    <button type="submit">Noter</button>
+  </form>
+
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $(".star-container").rateYo({
+        rating: 0, // Note par défaut
+        numStars: 5, // Nombre d'étoiles à afficher
+        starWidth: "25px", // Largeur des étoiles
+        fullStar: true, // Utilise des étoiles pleines au lieu de demi-étoiles
+        onSet: function(rating) {
+          // Cette fonction sera appelée lorsque l'utilisateur attribue une note
+          // Vous pouvez stocker la note dans un champ de formulaire caché
+          $("#id_note").val(rating);
+        }
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'Employe/home_emp.html' %}
+{% load static %}
+
+{% block content %}
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Voitures Disponibles</h2>
+                </div>
+            </div>
+        </div>
+        <!-- row -->
+        <div class="row column4 graph">
+            <!-- Gallery section -->
+            <form method="post" action="{% url 'creer_reservation' %}">
+                {% csrf_token %}
+                <div class="col-md-12">
+                    <div class="white_shd full margin_bottom_30">
+                        <div class="full graph_head">
+                            <div class="heading1 margin_0">
+                                <h2>Voitures Disponibles</h2>
+                            </div>
+                        </div>
+                        <div class="full gallery_section_inner padding_infor_info">
+                            <div class="row">
+                                {% for voiture in vehicules %}
+                                <div class="col-sm-4 col-md-3 margin_bottom_30">
+                                    <div class="column">
+                                        <div class="img-container">
+                                            <a data-fancybox="gallery" href="{{ voiture.photo.url }}">
+                                                <img class="img-responsive img-proportion" src="{{ voiture.photo.url }}" alt="{{ voiture.marque }} {{ voiture.modele }}" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="heading_section">
+                                        <h4>{{ voiture.marque }} {{ voiture.modele }}</h4>
+                                    </div>
+                                    <input type="checkbox" name="voitures" value="{{ voiture.id }}" />
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Réserver les voitures sélectionnées</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Style pour que les images aient les mêmes proportions */
+    .img-proportion {
+        max-width: 100%; /* Pour que l'image ne dépasse pas sa taille originale */
+        height: auto; /* Pour conserver le rapport largeur/hauteur d'origine */
+    }
+
+    /* Style pour le conteneur d'image */
+    .img-container {
+        text-align: center; /* Centre l'image horizontalement */
+        height: 200px; /* Définissez ici la hauteur souhaitée pour toutes les images */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+{% endblock %}

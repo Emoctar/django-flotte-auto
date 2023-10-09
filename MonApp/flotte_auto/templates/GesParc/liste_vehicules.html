@@ -1,0 +1,96 @@
+{% extends 'GesParc/home_gesparc.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <!-- Styles et métadonnées ici... -->
+</head>
+
+<body>
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Espace Vehicules</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Formulaire de modification -->
+                <div class="white_shd full margin_bottom_30">
+                    <div class="full graph_head">
+                        <div class="heading1 margin_0">
+                            <h2>Liste des vehicules</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="full price_table padding_infor_info">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-container">
+                        <table id="vehiculesTable" class="table table-striped">
+                            <!-- Entête du tableau -->
+                            <thead>
+                                <tr>
+                                    <th>Marque</th>
+                                    <th>Modèle</th>
+                                    <th>Année de Fabrication</th>
+                                    <th>Kilométrage</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <!-- Corps du tableau -->
+                            <tbody>
+                                {% for vehicule in vehicules %}
+                                <tr>
+                                    <td>{{ vehicule.marque }}</td>
+                                    <td>{{ vehicule.modele }}</td>
+                                    <td>{{ vehicule.annee_fabrication }}</td>
+                                    <td>{{ vehicule.kilometrage }}</td>
+                                    <td>
+                                        {% if vehicule.statut %}
+                                            <span class="badge bg-success">Disponible</span>
+                                        {% elif vehicule.statut %}
+                                            <span class="badge bg-warning">En entretien</span>
+                                        {% elif vehicule.statut %}
+                                            <span class="badge bg-danger">Réservé</span>
+                                        {% elif vehicule.statut %}
+                                            <span class="badge bg-danger">Indisponible</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'modifier_vehicule' vehicule.id %}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                        <a href="{% url 'ajouter_assurance' vehicule.id %}" class="btn btn-primary btn-sm">
+                                            <i class="fa-solid fa-car-burst"></i>
+                                        </a>
+                                    </td>
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#vehiculesTable').DataTable({
+            "paging": true, // Activation de la pagination
+            "pageLength": 6, // Nombre d'éléments par page
+            "searching": true, // Activation de la recherche
+            "info": false // Masquage des informations sur la pagination
+        });
+    });
+</script>
+</body>
+{% endblock %}
