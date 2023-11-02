@@ -669,3 +669,28 @@ def mettre_a_jour_statut_vehicules(request):
 
     return redirect('liste_vehicules')
 
+
+def liste_assurances(request):
+    assurances = Assurance.objects.all()
+    context = {'assurances': assurances}
+    return render(request, 'Assurance/liste_assurances.html', context)
+
+
+from django.shortcuts import render
+
+def ma_vue(request):
+    # Récupérer l'utilisateur connecté
+    utilisateur_connecte = request.user
+    
+    # Vérifier s'il a un gestionnaire de parc associé
+    if hasattr(utilisateur_connecte, 'GestionnaireParc'):
+        gestionnaire_parc = utilisateur_connecte.GestionnaireParc
+    else:
+        gestionnaire_parc = None
+    
+    context = {
+        'gestionnaire_parc': gestionnaire_parc,
+    }
+    
+    return render(request, 'GesParc/home_GesParc.html', context)
+

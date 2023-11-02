@@ -1,0 +1,104 @@
+{% extends "GesParc/home_GesParc.html" %}
+
+{% block content %}
+{% comment %} <div class="container">
+    <h2>Liste des Assurances</h2>
+    <ul>
+        {% for assurance in assurances %}
+        <li>{{ assurance.nom }} - {{ assurance.montant }} €</li>
+        {% endfor %}
+    </ul>
+</div> {% endcomment %}
+
+<div class="container-fluid">
+    <div class="row column_title">
+       <div class="col-md-12">
+          <div class="page_title">
+             <h2>Assurance <small>( historiques des Assurances )</small></h2>
+          </div>
+       </div>
+    </div>
+    <!-- row -->
+    <div class="row">
+       <!-- invoice section -->
+       <div class="col-md-12">
+          <div class="white_shd full margin_bottom_30">
+             <div class="full graph_head">
+                <div class="heading1 margin_0">
+                   <h2><i class="fa fa-file-text-o"></i> Assurances</h2>
+                </div>
+             </div>
+             {% comment %} <div class="full">
+                {% comment %} <div class="invoice_inner">
+                   <div class="row">
+                      <div class="col-md-4">
+                         <div class="full invoice_blog padding_infor_info padding-bottom_0">
+                            <h4>From</h4>
+                            <p><strong>Pluto Admin</strong><br>  
+                               427 Schoen Circles Suite 124<br> 
+                               Melbourne Australia<br>    
+                               <strong>Phone : </strong><a href="tel:9876543210">9876 543 210</a><br>  
+                               <strong>Email : </strong><a href="mailto:yourmail@gmail.com">Yourmail@gmail.com</a>
+                            </p>
+                         </div>
+                      </div>
+                      <div class="col-md-4">
+                         <div class="full invoice_blog padding_infor_info padding-bottom_0">
+                            <h4>To</h4>
+                            <p><strong>David Roman</strong><br>  
+                               427 Schoen Circles Suite 124<br> 
+                               Melbourne Australia<br>    
+                               <strong>Phone : </strong><a href="tel:9876543210">9876 543 210</a><br>  
+                               <strong>Email : </strong><a href="mailto:yourmail@gmail.com">Yourmail@gmail.com</a>
+                            </p>
+                         </div>
+                      </div>
+                      <div class="col-md-4">
+                         <div class="full invoice_blog padding_infor_info padding-bottom_0">
+                            <h4>Invoice No - #111457 </h4>
+                            <p><strong>Order ID : </strong>5b6R9C<br> 
+                               <strong>Payment Due : </strong>July/18/2018<br> 
+                               <strong>Account : </strong>254-55847
+                            </p>
+                         </div>
+                      </div>
+                   </div>
+                </div> {% endcomment %}
+             </div> 
+             <div class="full padding_infor_info">
+                <div class="table_row">
+                   <div class="table-responsive">
+                      <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Vehicule</th>
+                                    <th>Compagnie Assurance</th>
+                                    <th>Date Debut</th>
+                                    <th> Date Fin</th>
+                                    <th>Montant </th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for assurance in assurances %}
+                            <tr>
+                                <td>{{ assurance.vehicule }}</td>
+                                <td>{{ assurance.compagnie_assurance }}</td>
+                                <td>{{ assurance.date_debut }}</td>
+                                <td>{{ assurance.date_fin }}</td>
+                                <td>{{ assurance.prime_annuelle }}</td> 
+                                    
+                                
+
+                            {% endfor %}
+                            </tbody>
+                            
+                      </table>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+{% endblock %}

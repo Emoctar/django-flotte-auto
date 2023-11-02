@@ -21,7 +21,7 @@ class Vehicule(models.Model):
         ('En Entretien', 'En Entretien'),
         ('Réservé', 'Réservé'),
         ('Indisponible', 'Indisponible'),
-        # Ajoutez d'autres statuts si nécessaire
+        
     )
     
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='Disponible')
@@ -214,6 +214,7 @@ class Assurance(models.Model):
     date_debut = models.DateField()
     date_fin = models.DateField()
     prime_annuelle = models.DecimalField(max_digits=10, decimal_places=2)
+    statut=models.CharField(max_length=50, default='Valide')
 
     def __str__(self):
         return f"Assurance de {self.vehicule} ({self.compagnie_assurance})"

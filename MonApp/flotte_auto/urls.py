@@ -68,6 +68,7 @@ urlpatterns = [
       # Vues liées aux assurances
     path('ajouter_assurance/<int:vehicule_id>/', views.ajouter_assurance, name='ajouter_assurance'),
     path('mettre_a_jour_statut_vehicules/', views.mettre_a_jour_statut_vehicules, name='mettre_a_jour_statut_vehicules'),
+    path('liste_assurances/', views.liste_assurances, name= 'liste_assurances'),
 
     #Vue pour la maintenance
      path('gestionnaire_intervention_profile/ajouter_maintenance/', views.ajouter_maintenance, name='ajouter_maintenance'),

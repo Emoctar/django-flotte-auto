@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'flotte_auto',
     'usersapp',
     'sql_server.pyodbc',
+     
+     
     
     
 ]
@@ -67,6 +69,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # 'flotte_auto.context_processors.user_photo',  # Remplacez "votre_application" par le nom de votre application
             ],
         },
     },
@@ -195,18 +198,23 @@ CELERY_BEAT_SCHEDULE = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+
+
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
+
 # LOGOUT_REDIRECT_URL= 'login'
 
 # simuler l’envoi d’e-mail de réinitialisation de mot de passe sur console.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587  # Port SMTP de Gmail
-EMAIL_USE_TLS = True  # Utilisez TLS pour la sécurité
-EMAIL_HOST_USER = 'ehm.diallo3@gmail.com'  # Votre adresse e-mail Gmail
-EMAIL_HOST_PASSWORD = 'M0ct@r0945'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587  # Port SMTP de Gmail
+# EMAIL_USE_TLS = True  # Utilisez TLS pour la sécurité
+# EMAIL_HOST_USER = 'ehm.diallo3@gmail.com'  # Votre adresse e-mail Gmail
+# EMAIL_HOST_PASSWORD = 'M0ct@r0945'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
 
 #######################################
 #API NOTIFICATION TWILIO
@@ -215,3 +223,6 @@ VONAGE_API_KEY = 'beef8cb1'
 VONAGE_API_SECRET = 'rlGAZHXoE2O3fivE'
 VONAGE_PHONE_NUMBER = '+221781397254'
 
+
+
+##GoogleAPI

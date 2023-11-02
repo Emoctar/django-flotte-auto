@@ -47,6 +47,19 @@ class CustomLoginView(LoginView):
         else:
             # Redirection par défaut pour les autres utilisateurs (vous pouvez personnaliser)
             return reverse_lazy('home')  # Redirigez vers la page d'accueil par défaut
+        
+from django.contrib.auth.views import PasswordResetDoneView
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'registration/mypassword_reset_done.html' 
+    
+
+from django.contrib.auth.views import PasswordResetConfirmView
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'  # Spécifiez le modèle personnalisé ici
+    success_url = reverse_lazy('login')  #
+    
 
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
@@ -54,6 +67,9 @@ from django.contrib.auth.decorators import login_required
 
 @login_required  # Utilisez cette décoration pour protéger l'accès aux pages de profil
 def gestionnaire_parc_profile(request):
+    context = {
+        'user': request.user  # Transmettez l'utilisateur connecté au modèle
+    }
     # Logique spécifique au profil gestionnaire_parc
     return render(request, 'GesParc/Dashbord.html')
 
@@ -75,8 +91,6 @@ def gestionnaire_intervention_profile(request):
 # class CustomLogoutView(LogoutView):
 #     # Vous pouvez personnaliser la vue de déconnexion ici si nécessaire
 #     pass
-
-
 
 
 

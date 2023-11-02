@@ -62,7 +62,7 @@ class GestionnaireParcForm(forms.ModelForm):
     class Meta:
         model = GestionnaireParc
         fields = '__all__'
-    Photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+    photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
     
     
 
