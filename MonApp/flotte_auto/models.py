@@ -37,7 +37,7 @@ class Vehicule(models.Model):
 
     @classmethod
     def vehicules_reserve(cls):
-        return cls.objects.filter(statut='Reserve')
+        return cls.objects.filter(statut='Réservé')
     
     
     
@@ -49,6 +49,25 @@ class Vehicule(models.Model):
 
     def __str__(self):
         return self.modele + self.marque
+    
+    
+    def consommation_moyenne(self):
+        consommations = ConsommationCarburant.objects.filter(vehicule=self)
+        if consommations.exists():
+            quantite_totale = sum([consommation.quantite_carburant for consommation in consommations])
+            distance_totale = sum([consommation.distance_parcourue for consommation in consommations])
+            if distance_totale > 0:
+                return quantite_totale / distance_totale
+        return 0 
+    
+    def calculer_taux_consommation_moyen(self, start_date, end_date):
+        consommations = ConsommationCarburant.objects.filter(vehicule=self, date__range=[start_date, end_date])
+        total_fuel = sum(consommation.quantite_carburant for consommation in consommations)
+        total_distance = sum(consommation.distance_parcourue for consommation in consommations)
+        if total_distance != 0:
+            return total_fuel / total_distance
+        else:
+            return 0
 
 
 ##########################################################
@@ -91,18 +110,7 @@ class GestionnaireIntervention(models.Model):
         return self.utilisateur.first_name
 
 
-class Employé(models.Model):
-    utilisateur = models.OneToOneField(User, on_delete=models.CASCADE)
-    poste = models.CharField(max_length=255)
-    departement = models.CharField(max_length=255)
-    telephone=models.IntegerField()
-    adresse=models.CharField(max_length=120)
-    photo = models.ImageField(upload_to='photos/', blank=True, null=True)
-    reservations = models.ManyToManyField('ReservationVoiture', blank=True)  # Relation many-to-many
-    
-    def __str__(self):
-        return self.utilisateur.first_name
-    
+
 #####################################
 ##
 #####################################
@@ -124,6 +132,28 @@ class ReservationVoiture(models.Model):
     
     def __str__(self):
         return self.employe.username
+    
+    @staticmethod
+    def reservations_acceptees():
+        return ReservationVoiture.objects.filter(statut='Validée')
+
+    @staticmethod
+    def reservations_refusees():
+        return ReservationVoiture.objects.filter(statut='Refusée')
+    
+    
+    
+class Employé(models.Model):
+    utilisateur = models.OneToOneField(User, on_delete=models.CASCADE)
+    poste = models.CharField(max_length=255)
+    departement = models.CharField(max_length=255)
+    telephone=models.IntegerField()
+    adresse=models.CharField(max_length=120)
+    photo = models.ImageField(upload_to='photos/', blank=True, null=True)
+
+    def __str__(self):
+        return self.utilisateur.first_name
+    
 
 
 
@@ -193,12 +223,12 @@ class Cout(models.Model):
     
     
     
-class DonnéesConsommationCarburant(models.Model):
+class ConsommationCarburant(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.CASCADE)
     date = models.DateField()
-    quantité_carburant = models.DecimalField(max_digits=8, decimal_places=2)
-    gestionnaire_consommation = models.ForeignKey(GestionnaireConsommation, on_delete=models.CASCADE)
-
+    quantite_carburant = models.DecimalField(max_digits=6, decimal_places=2)  # En litres
+    distance_parcourue = models.DecimalField(max_digits=6, decimal_places=2)  # En kilomètres
+  
 
 
 class NoteConducteur(models.Model):

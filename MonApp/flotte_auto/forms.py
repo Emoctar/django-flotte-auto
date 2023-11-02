@@ -1,14 +1,15 @@
 from django import forms
 from django.forms import inlineformset_factory
+from django.core.exceptions import ValidationError
 
 
 from .models import *
 
 
-class DonnéesConsommationCarburantForm(forms.ModelForm):
-    class Meta:
-        model = DonnéesConsommationCarburant
-        fields = '__all__'  # Vous pouvez personnaliser les champs ici si nécessaire
+# class DonnéesConsommationCarburantForm(forms.ModelForm):
+#     class Meta:
+#         model = DonnéesConsommationCarburant
+#         fields = '__all__'  # Vous pouvez personnaliser les champs ici si nécessaire
 
 
 
@@ -43,17 +44,40 @@ class MaintenanceForm(forms.ModelForm):
 
 
 
+# class ReservationVoitureForm(forms.ModelForm):
+#     vehicules = forms.ModelMultipleChoiceField(
+#         queryset=Vehicule.objects.all(),
+#         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+#     )
+
+#     class Meta:
+#         model = ReservationVoiture
+#         fields = ['date_debut', 'date_fin', 'destination', 'motif', 'vehicules']
+
+   
+
 class ReservationVoitureForm(forms.ModelForm):
     vehicules = forms.ModelMultipleChoiceField(
         queryset=Vehicule.objects.all(),
-        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+        widget=forms.CheckboxSelectMultiple,
     )
 
     class Meta:
         model = ReservationVoiture
         fields = ['date_debut', 'date_fin', 'destination', 'motif', 'vehicules']
 
-   
+    def clean_vehicules(self):
+        vehicules = self.cleaned_data.get('vehicules')
+
+        # Assurez-vous que l'employé ne sélectionne pas plus de 3 véhicules
+        if vehicules.count() > 3:
+            raise forms.ValidationError("Vous ne pouvez sélectionner que 3 véhicules au maximum.")
+
+        return vehicules
+
+
+
+
 
 
 
@@ -111,3 +135,18 @@ class AssuranceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Vous pouvez ajouter des attributs HTML personnalisés ici si nécessaire
+
+
+
+
+
+class SearchForm(forms.Form):
+    start_date = forms.DateField(label='Date de début')
+    end_date = forms.DateField(label='Date de fin')
+    vehicle = forms.ModelChoiceField(queryset=Vehicule.objects.all(), required=False, label='Véhicule')
+    
+    
+class ConsommationCarburantForm(forms.ModelForm):
+    class Meta:
+        model = ConsommationCarburant
+        fields = ['vehicule', 'date', 'quantite_carburant', 'distance_parcourue']

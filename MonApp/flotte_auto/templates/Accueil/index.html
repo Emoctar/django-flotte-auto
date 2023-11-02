@@ -11,8 +11,8 @@
 				<div class="col-lg-6 col-md-6 ftco-animate d-flex align-items-end">
 					<div class="text">
 						<h1 class="mb-4"><span id="animated-text1"></span> <span id="animated-text2"></span> <span id="animated-text3"></span></h1>
-						<p style="font-size: 18px;">A small river named Duden flows by their place and supplies it with
-							the necessary regelialia. It is a paradisematic country, in which roasted parts</p>
+						{% comment %} <p style="font-size: 18px;">A small river named Duden flows by their place and supplies it with
+							the necessary regelialia. It is a paradisematic country, in which roasted parts</p> {% endcomment %}
 						<a href="https://vimeo.com/45830194"
 							class="icon-wrap popup-vimeo d-flex align-items-center mt-4">
 							<div class="icon d-flex align-items-center justify-content-center">
@@ -260,9 +260,9 @@
 							<div class="text p-4 text-center">
 								<h2 class="mb-0"><a href="#">{{ vehicule.marque }}</a></h2>
 								<span>{{ vehicule.modele }}</span>
-								<p class="d-flex mb-0 d-block"><a href="#"
-										class="btn btn-black btn-outline-black mr-1">Book now</a> <a href="#"
-										class="btn btn-black btn-outline-black ml-1">Details</a></p>
+								<p class="d-flex mb-0 d-block"><a href="{%url 'login'%}"
+										class="btn btn-black btn-outline-black mr-1">Réserver</a> <a href=""
+										class="btn btn-black btn-outline-black ml-1">Détails</a></p>
 							</div>
 						</div>
 					<!-- </div> -->
@@ -409,16 +409,11 @@
 				<div class="col-md-6 wrap-about py-md-5 ftco-animate">
 					<div class="heading-section mb-5 pl-md-5">
 						<span class="subheading">A Propos de Nous</span>
-						<h2 class="mb-4">Reserver les véhicules parfaites pour vos missions</h2>
+						<h2 class="mb-4">Qui Sommes-Nous ?</h2>
 
-						<p>A small river named Duden flows by their place and supplies it with the necessary regelialia.
-							It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-						<p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it
-							would have been rewritten a thousand times and everything that was left from its origin
-							would be the word "and" and the Little Blind Text should turn around and return to its own,
-							safe country. But nothing the copy said could convince her and so it didn’t take long until
-							a few insidious Copy Writers ambushed her, made her drunk with Longe and Parole and dragged
-							her into their agency, where they abused her for their.</p>
+						<p>Nous sommes une entreprise dédiée à fournir des solutions de gestion de flotte efficaces et fiables pour répondre à tous vos besoins de déplacement. Notre priorité est d'offrir un service de réservation de véhicules simple, sûr et pratique, adapté à vos missions professionnelles.</p>
+						<p>Avec une équipe expérimentée et des véhicules bien entretenus, nous nous engageons à garantir la satisfaction de nos clients en offrant des solutions de mobilité flexibles et adaptées à leurs exigences spécifiques. Notre objectif est de faciliter vos déplacements professionnels tout en assurant confort et sécurité.</p>
+						<p>Rejoignez-nous pour profiter d'une expérience de réservation de véhicules sans tracas et pour découvrir notre engagement envers un service de qualité supérieure.</p>
 						<p><a href="{%url 'login'%}" class="btn btn-primary">Réserver</a></p>
 					</div>
 				</div>

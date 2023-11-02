@@ -9,12 +9,12 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- site metas -->
-      <title> Espace Reservation</title>
+      <title> Espace Gestionnaire Parc</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
       <!-- site icon -->
-      <link rel="icon" href="{%static 'style/images/fevicon.png'%}" type="image/png" />
+      <link rel="icon" href="{%static 'style/images/favicon.png'%}" type="image/png" />
       <!-- bootstrap css -->
       <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -47,14 +47,13 @@
                <div class="sidebar_blog_1">
                   <div class="sidebar-header">
                      <div class="logo_section">
-                        <a href="#"><img class="logo_icon img-responsive" src="images/logo/logo_icon.png" alt="#" /></a>
+                        <a href="#"><img class="logo_icon img-responsive" src="{%static 'style/images/logo/logo_icon.png '%}" alt="#" /></a>
                      </div>
                   </div>
                   <div class="sidebar_user_info">
                      <div class="icon_setting"></div>
                      <div class="user_profle_side">
-                        <img class="img-responsive" src="{{user.GestionnaireParc.photo.url}}" alt="Photo de l'utilisateur" /> 
-
+                        <div class="user_img"><img class="img-responsive" src="{{user.gestionnaireparc.photo.url}}" alt="#" /></div>
                         <div class="user_info">
                            <h6>{{user.get_full_name}}</h6>
                            <p><span class="online_animation"></span> Online</p>
@@ -64,33 +63,47 @@
                </div>
                 <div class="sidebar_blog_2">
                   <h4>General</h4>
-                  <ul class="list-unstyled components">c
+                  <ul class="list-unstyled components">
                      
                      <li><a href="{%url 'gestionnaire_parc_profile'%}"><i class="fa fa-dashboard yellow_color "></i> <span>Dashbord</span></a></li>
-
+                     <li>
+                        <a href="#reservation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-paper-plane red_color"></i> <span>Reservation</span></a>
+                        <ul class="collapse list-unstyled" id="reservation">
+                           <li><a href="{%url 'gerer_reservations_attente' %}"> <span>En Attente</span></a></li>
+                           <li><a href="{%url 'gerer_reservations_accepter'%}"> <span>Validée</span></a></li>
+                           <li><a href="{%url 'gerer_reservations_refuse'%}"> <span>Refusée</span></a></li>
+                           
+                        </ul>
+                        
+                     </li>
                      <li>
                         <a href="#element" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-car" style="color: #214ed4;"></i>
                            <span>Flotte</span></a>
                         <ul class="collapse list-unstyled" id="element">
-                           <li><a href="{%url 'creer_vehicule'%}">> <span>Nouveau Vehicule</span></a></li>
-                           <li><a href="{%url 'liste_vehicules'%}">> <span>Liste Vehicule</span></a></li>
+                           <li><a href="{%url 'creer_vehicule'%}"> <span>Nouveau Vehicule</span></a></li>
+                           <li><a href="{%url 'liste_vehicules'%}"> <span>Liste Vehicule</span></a></li>
+                           
+                        </ul>
+                     </li>
+                     <li>
+                        <a href="#apps" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa-solid fa-gas-pump" style="color: #f47710;"></i> <span>Gerer Consommation</span></a>
+                        <ul class="collapse list-unstyled" id="apps">
+                           <li><a href="{%url 'enregistrer_donnees_consommation' %}"> <span>Nouvelle Consommation</span></a></li>
+                           <li><a href="{%url 'liste_donnees_consommation_carburant'%}"> <span>Historique Consommation</span></a></li>
                            
                         </ul>
                      </li>
                      <li><a href="{%url 'liste_assurances'%}"><i class="fa-solid fa-car-burst" style="color: #66b4f0;"></i> <span>Assurance</span></a></li>
                      <li>
-                        <a href="#apps" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa-solid fa-users"></i> <span>Gerer Conducteur</span></a>
-                        <ul class="collapse list-unstyled" id="apps">
-                           <li><a href="{%url 'creer_conducteur' %}">> <span>Nouveau Conducteur</span></a></li>
-                           <li><a href="{%url 'liste_conducteurs'%}">> <span>Liste Conducteurs</span></a></li>
+                        <a href="#chauffeur" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa-solid fa-users"></i> <span>Gerer Conducteurs</span></a>
+                        <ul class="collapse list-unstyled" id="chauffeur">
+                           <li><a href="{%url 'creer_conducteur' %}"> <span>Nouveau Conducteur</span></a></li>
+                           <li><a href="{%url 'liste_conducteurs'%}"> <span>Liste Conducteurs</span></a></li>
                            
                         </ul>
                      </li>
-                     <li><a href="price.html"><i class="fa fa-briefcase blue1_color"></i> <span>Pricing Tables</span></a></li>
-                     <li>
-                        <a href="contact.html">
-                        <i class="fa fa-paper-plane red_color"></i> <span>Contact</span></a>
-                     </li>
+                     
+                     
                   </ul>
                </div> 
             </nav>
@@ -103,18 +116,21 @@
                      <div class="full">
                         <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
                         <div class="logo_section">
-                           <a href="#"><img class="img-responsive" src="{%static 'style/images/logo/logo.png '%}" alt="#" /></a>
+                           <a href="#"><img class="img-responsive" src="{%static 'style/images/logo/myfleet1.png '%}" alt="#" /></a>
                         </div>
                         <div class="right_topbar">
                            <div class="icon_info">
                               <ul>
-                                 <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                 <li id="notification">
+                                    <a href="#"><i class="fa fa-bell-o"></i><span id="notification-count" class="badge"></span></a>
+                                    
+                                </li>
                                  <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
                                  <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
                               </ul>
                               <ul class="user_profile_dd">
                                  <li>
-                                    <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{user.photo.url}}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{ user.gestionnaireparc.photo.url }}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
                                     <div class="dropdown-menu">
                                        <a class="dropdown-item" href="#">My Profile</a>
                                        
@@ -156,9 +172,7 @@
       <script src="{%static 'style/js/perfect-scrollbar.min.js'%}"></script>
       <!-- custom js -->
       <script src="{%static 'style/js/custom.js'%}"></script>
-      <!-- google map js -->
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
-      <!-- end google map js -->
+   
 
             <!-- chart js -->
             <script src="{%static 'style/js/Chart.min.js'%}"></script>

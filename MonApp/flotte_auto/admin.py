@@ -14,7 +14,7 @@ admin.site.register(Itineraire)
 admin.site.register(PerformanceConduite)
 admin.site.register(Notification)
 admin.site.register(Cout)
-admin.site.register(DonnéesConsommationCarburant)
+admin.site.register(ConsommationCarburant)
 
 # Assurez-vous d'enregistrer tous les modèles que vous souhaitez gérer dans l'interface d'administration.
 

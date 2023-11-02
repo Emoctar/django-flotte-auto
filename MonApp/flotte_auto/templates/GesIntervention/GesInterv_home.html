@@ -17,7 +17,10 @@
       
       <link rel="icon" href="{%static 'style/images/fevicon.png'%}" type="image/png" />
       <!-- bootstrap css -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
       <link rel="stylesheet" href="{%static 'style/css/bootstrap.min.css'%}" />
+    
+
       <!-- site css -->
       <link rel="stylesheet" href="{%static 'style/style.css'%}" />
       <!-- responsive css -->
@@ -34,10 +37,7 @@
       <link rel="stylesheet" href="{%static 'style/js/semantic.min.css'%}" />
       
      
-      <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
+     
    </head>
    <body class="inner_page map">
       <div class="full_container">
@@ -47,13 +47,13 @@
                <div class="sidebar_blog_1">
                   <div class="sidebar-header">
                      <div class="logo_section">
-                        <a href="#"><img class="logo_icon img-responsive" src="images/logo/logo_icon.png" alt="#" /></a>
+                        <a href="#"><img class="logo_icon img-responsive" src="{%static 'style/images/logo/logo_icon.png '%}" alt="#" /></a>
                      </div>
                   </div>
                   <div class="sidebar_user_info">
                      <div class="icon_setting"></div>
                      <div class="user_profle_side">
-                        <div class="user_img"><img class="img-responsive" src="images/layout_img/user_img.jpg" alt="#" /></div>
+                        <div class="user_img"><img class="img-responsive" src="{{user.gestionnaireintervention.photo.url}}" alt="#" /></div>
                         <div class="user_info">
                            <h6>{{user.get_full_name}}</h6>
                            <p><span class="online_animation"></span> Online</p>
@@ -63,6 +63,23 @@
                </div>
                 <div class="sidebar_blog_2">
                   <h4>General</h4>
+                  <ul class="list-unstyled components"> 
+                     {% comment %} <li><a href="{%url 'ajouter_maintenance'%}"><i class="fa-solid fa-screwdriver-wrench"></i> <span>Nouvelle Maintenance</span></a></li> {% endcomment %}
+                     <li>
+                        <a href="#apps" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa-solid fa-screwdriver-wrench"></i> <span>Maintenances</span></a>
+                        <ul class="collapse list-unstyled" id="apps">
+                           <li><a href="{%url 'ajouter_maintenance' %}"> <span>Nouvelle Maintenance</span></a></li>
+                           <li><a href="{%url 'liste_maintenance'%}"> <span>Mes Maintenances</span></a></li>
+                           
+                        </ul>
+                     </li>
+
+
+
+
+
+                  </ul>
+
                </div> 
             </nav>
             <!-- end sidebar -->
@@ -74,7 +91,7 @@
                      <div class="full">
                         <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
                         <div class="logo_section">
-                           <a href="#"><img class="img-responsive" src="{%static 'style/images/logo/logo.png '%}" alt="#" /></a>
+                           <a href="#"><img class="img-responsive" src="{%static 'style/images/logo/myfleet1.png '%}" alt="#" /></a>
                         </div>
                         <div class="right_topbar">
                            <div class="icon_info">
@@ -85,7 +102,7 @@
                               </ul>
                               <ul class="user_profile_dd">
                                  <li>
-                                    <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{user.photo.url}}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{user.gestionnaireintervention.photo.url}}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
                                     <div class="dropdown-menu">
                                        <a class="dropdown-item" href="#">My Profile</a>
                                        
@@ -138,6 +155,7 @@
             <script src="{%static 'style/js/Chart.bundle.min.js'%}"></script>
             <script src="{%static 'style/js/utils.js'%}"></script>
             <script src="{%static 'style/js/analyser.js'%}"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <!-- nice scrollbar -->
             <script src="{%static 'style/js/perfect-scrollbar.min.js'%}"></script>
             <script>

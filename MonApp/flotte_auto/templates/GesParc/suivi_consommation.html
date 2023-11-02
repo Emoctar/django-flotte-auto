@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Suivi de consommation de carburant</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Suivi de consommation de carburant</h1>
+    <form method="post" id="searchForm">
+        {% csrf_token %}
+        <div>
+            <label for="start_date">Date de début :</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
+        <div>
+            <label for="end_date">Date de fin :</label>
+            <input type="date" id="end_date" name="end_date" required>
+        </div>
+        <div>
+            <label for="vehicule">Véhicule :</label>
+            <select id="vehicule" name="vehicule">
+                {% for vehicule in vehicules %}
+                    <option value="{{ vehicule.id }}">{{ vehicule.marque }} - {{ vehicule.modele }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <div id="searchResults" style="display: none;">
+        <h2>Résultats de la recherche :</h2>
+        <p>Taux de consommation : <span id="consumptionRate"></span></p>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#searchForm').submit(function(event) {
+                event.preventDefault();
+                var start_date = $('#start_date').val();
+                var end_date = $('#end_date').val();
+                var vehicle_id = $('#vehicule').val();
+        
+                // Effectuez une requête AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: 'gestionnaire_parc_profile/calculate_consumption_rate/',  // Assurez-vous que l'URL est correcte
+                    data: {
+                        'start_date': start_date,
+                        'end_date': end_date,
+                        'vehicle_id': vehicle_id
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        // Mettez à jour le contenu de l'élément #consumptionRate avec le taux de consommation renvoyé
+                        $('#consumptionRate').text(response.consumption_rate);
+                    },
+                    error: function(xhr, errmsg, err) {
+                        // Gérez les erreurs éventuelles ici
+                        console.log(xhr.status + ': ' + xhr.responseText);
+                    }
+                });
+        
+                $('#searchResults').show();
+            });
+        });
+    </script>
+</body>
+</html>

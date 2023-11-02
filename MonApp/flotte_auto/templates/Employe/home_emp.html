@@ -47,7 +47,7 @@
                <div class="sidebar_blog_1">
                   <div class="sidebar-header">
                      <div class="logo_section">
-                        <a href="#"><img class="logo_icon img-responsive" src="images/logo/logo_icon.png" alt="#" /></a>
+                        <a href="#"><img class="logo_icon img-responsive" src="{%static 'style/images/logo/logo_icon.png '%}" alt="#" /></a>
                      </div>
                   </div>
                   <div class="sidebar_user_info">
@@ -63,6 +63,20 @@
                </div>
                 <div class="sidebar_blog_2">
                   <h4>General</h4>
+                  <ul class="list-unstyled components">
+                     
+                     
+                     <li>
+                        <a href="{%url 'creer_reservation' %}">
+                        <i class="fa fa-paper-plane red_color"></i> <span>Reservation</span></a>
+                     </li>
+                     <li>
+                        <a href="{%url 'liste_vehicules_disponible' %}">
+                           <i class="fa-regular fa-car"></i> <span>Voitures</span>
+                        </a>
+                     </li>
+                     
+                  </ul>
                </div> 
             </nav>
             <!-- end sidebar -->
@@ -74,7 +88,7 @@
                      <div class="full">
                         <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
                         <div class="logo_section">
-                           <a href="#"><img class="img-responsive" src="{%static 'style/images/logo/logo.png '%}" alt="#" /></a>
+                           <a href="#"><img class="img-responsive" src="{%static 'style/images/logo/myfleet1.png '%}" alt="#" /></a>
                         </div>
                         <div class="right_topbar">
                            <div class="icon_info">
@@ -87,7 +101,7 @@
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{user.employé.photo.url}}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="#">My Profile</a>
+                                       <a class="dropdown-item" href="{%url 'employe_profile'%}">My Profile</a>
                                        
                                        <a class="dropdown-item" href="{%url 'logout'%}"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                     </div>

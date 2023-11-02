@@ -1,0 +1,97 @@
+{% extends 'GesParc/home_gesparc.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Historique des réservations refusées</h2>
+    <div class="table-responsive">
+        <table class="table table-striped" id="reservations-table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Date de début</th>
+                    <th scope="col">Date de fin</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Motif</th>
+                    <th scope="col">Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations_refuse %}
+                    <tr>
+                        <td>{{ reservation.date_debut }}</td>
+                        <td>{{ reservation.date_fin }}</td>
+                        <td>{{ reservation.destination }}</td>
+                        <td>{{ reservation.motif }}</td>
+                        <td><a href="{% url 'details_reservation' reservation.id %}" class="btn btn-info btn-sm">Voir les détails</a></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">Aucune réservation refusée n'est disponible.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Ajout de Bootstrap et des scripts de pagination -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<style>
+    .container {
+        margin-top: 50px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 12px;
+    }
+
+    th {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    tbody tr:nth-of-type(even) {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:hover {
+        background-color: #e2e2e2;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+        color: #fff;
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('#reservations-table').DataTable();
+    });
+</script>
+{% endblock %}

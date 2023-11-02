@@ -1,0 +1,77 @@
+{% extends 'GesParc/home_GesParc.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Nouvelle Consommation</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="add-vehicle-form white_shd">
+                    <h1 style="text-align: center;"> Nouvelle Utilisation</h1>
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <form method="POST" class="custom-form">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="vehicule" class="form-label">Véhicule</label>
+                                <select class="form-select custom-select" id="vehicule" name="vehicule">
+                                    {% for vehicule in vehicules %}
+                                        <option value="{{ vehicule.id }}">{{ vehicule.modele }} - {{ vehicule.marque }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" class="form-control custom-input" id="date" name="date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantite_carburant" class="form-label">Quantité de carburant (en litres)</label>
+                                <input type="number" class="form-control custom-input" id="quantite_carburant" name="quantite_carburant" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="distance_parcourue" class="form-label">Distance parcourue (en kilomètres)</label>
+                                <input type="number" class="form-control custom-input" id="distance_parcourue" name="distance_parcourue" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary custom-btn">Enregistrer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .custom-form {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    .custom-input {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 8px;
+    }
+
+    .custom-select {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 8px;
+    }
+
+    .custom-btn {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}

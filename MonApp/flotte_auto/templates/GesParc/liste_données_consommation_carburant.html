@@ -1,0 +1,104 @@
+{% extends 'GesParc/home_GesParc.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Consommation</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Formulaire de modification -->
+                <div class="white_shd full margin_bottom_30">
+                    <div class="full graph_head">
+                        <div class="heading1 margin_0">
+                            <h2 style="text-align: center; margin-bottom: 20px;">Liste des données de consommation de carburant</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            
+            <table class="table" id="consumptionTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Véhicule</th>
+                        <th>Quantité de carburant (litres)</th>
+                        <th>Distance parcourue (km)</th>
+                        <th>Taux de consommation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consommation in donnees_consommation %}
+                        <tr>
+                            <td>{{ consommation.date }}</td>
+                            <td>{{ consommation.vehicule.modele }} - {{ consommation.vehicule.marque }}</td>
+                            <td>{{ consommation.quantite_carburant }}</td>
+                            <td>{{ consommation.distance_parcourue }}</td>
+                            <td>{{ consommation.vehicule.consommation_moyenne }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'enregistrer_donnees_consommation' %}" class="btn btn-primary">
+                <i class="fa fa-plus" style="margin-right: 5px;"></i> Enregistrer une nouvelle consommation
+            </a>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Ajouter le CSS personnalisé pour améliorer l'apparence de la page -->
+    <style>
+        th, td {
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        h1 {
+            color: #337ab7;
+        }
+    </style>
+
+    <!-- Ajouter les scripts JS pour Datatables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#consumptionTable').DataTable();
+        });
+    </script>
+{% endblock %}

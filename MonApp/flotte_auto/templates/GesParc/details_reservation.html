@@ -2,15 +2,26 @@
 {%load static%}
 
 {% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="container">
     <div class="row">
         <!-- Informations du demandeur -->
         <div class="col-md-4">
             <div class="card mt-3">
-                <img src="{{ demandeur.sphoto.url }}" class="card-img-top" alt="{{ reservation.employe.nom }}">
+                <img src="{{ demandeur.employé.photo.url }}" class="card-img-top" alt="{{ demandeur.username }}">
                 <div class="card-body">
-                    <h5 class="card-title">{{ reservation.employe.nom }}</h5>
-                    <p class="card-text">{{ reservation.employe.poste }}</p>
+                    <h5 class="card-title">{{demandeur.get_full_name }}</h5>
+                    <p class="card-text">{{ demandeur.employé.poste}}</p>
+                    <p class="card-text"> Tel: {{ demandeur.employé.telephone}}</p>
+                    <p class="card-text"> Email: {{ demandeur.email}}</p>
                 </div>
             </div>
         </div>
@@ -38,6 +49,8 @@
                                 <th>Marque</th>
                                 <th>Modèle</th>
                                 <th>Plaque d'immatriculation</th>
+                                <th>Kilometrage</th>
+                                <th>Année</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,7 +59,9 @@
                                     <tr>
                                         <td>{{ vehicule.marque }}</td>
                                         <td>{{ vehicule.modele }}</td>
-                                        <td>{{ vehicule.plaque }}</td>
+                                        <td>{{ vehicule.numéro_immatriculation }}</td>
+                                        <td>{{ vehicule.kilometrage }}</td>
+                                        <td>{{ vehicule.annee_fabrication }}</td>
                                     </tr>
                                 {% endfor %}
                             {% else %}
@@ -58,21 +73,72 @@
                     </table>
                 </div>
             </div>
+            <div id="confirmation-success" class="alert alert-success" style="display: none;">
+                L'e-mail de confirmation a été envoyé avec succès.
+            </div>
+
 
             <!-- Boutons pour Accepter, Refuser et Télécharger au format PDF -->
-            <div class="mt-3">
-                <button id="accepter-reservation" class="btn btn-success">
-                    <i class="fas fa-check"></i> Accepter
-                </button>
-                <button id="refuser-reservation" class="btn btn-danger ml-2">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+            <style>
+                /* Ajoutez vos styles CSS ici */
+                .custom-dialog-style {
+                    max-width: 800px; /* Largeur maximale personnalisée pour la fenêtre modale */
+                }
+        
+                .custom-modal-content {
+                    background-color: #f8f9fa; /* Couleur de fond personnalisée pour la fenêtre modale */
+                    border: 1px solid #ced4da; /* Bordure personnalisée pour la fenêtre modale */
+                    /* Ajoutez d'autres styles personnalisés au besoin */
+                }
+            </style>
+        
+            <div class="mt-3 d-flex">
+                <form method="post" action="{% url 'valider_reservation' reservation.id %}" class="mr-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" id="accepter-reservation">
+                        <i class="fas fa-check"></i> Accepter
+                    </button>
+                </form>
+                            
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalRefus">
                     <i class="fas fa-times"></i> Refuser
                 </button>
-                <button id="telecharger-pdf" class="btn btn-info ml-2">
-                    <i class="fas fa-file-pdf"></i> Télécharger au format PDF
+                
+                <button type="button" class="btn btn-primary" id="telecharger-pdf">
+                    <i class="fas fa-download"></i> Télécharger au format PDF
                 </button>
-                <a href="{% url 'gerer_reservations_attente' %}" class="btn btn-secondary ml-2">
+            
+                <a href="{% url 'gerer_reservations_attente' %}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Retour
                 </a>
+            </div>
+            
+            
+            
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalRefus" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Refuser la réservation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulaire pour saisir le motif de refus -->
+                <form method="post" action="{% url 'refuser_reservation' reservation.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="motif_refus">Motif de refus</label>
+                        <textarea class="form-control" id="motif_refus" name="motif_refus" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Refuser la réservation</button>
+                </form>
             </div>
         </div>
     </div>
@@ -80,19 +146,51 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script>
-    document.getElementById('telecharger-pdf').addEventListener('click', function() {
-        // Logique pour générer et télécharger le PDF (voir le code précédent)
-        // ...
-    });
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<!-- Scripts JavaScript de Bootstrap et jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
     document.getElementById('accepter-reservation').addEventListener('click', function() {
         // Logique pour accepter la réservation (par exemple, envoi de notification)
         // ...
+
+        // Afficher la notification de succès pendant 5 secondes
+        document.getElementById('confirmation-success').style.display = 'block';
+        setTimeout(function() {
+            document.getElementById('confirmation-success').style.display = 'none';
+        }, 5000); // 5000 millisecondes = 5 secondes
     });
 
-    document.getElementById('refuser-reservation').addEventListener('click', function() {
-        // Logique pour refuser la réservation (par exemple, envoi de notification)
-        // ...
+   
+</script>
+<script>
+    document.getElementById('telecharger-pdf').addEventListener('mousedown', function() {
+        var doc = new jsPDF();
+        doc.text("Détails de la réservation :", 10, 10);
+        doc.text("Date de début : {{ reservation.date_debut }}", 10, 20);
+        doc.text("Date de fin : {{ reservation.date_fin }}", 10, 30);
+        doc.text("Destination : {{ reservation.destination }}", 10, 40);
+        doc.text("Motif : {{ reservation.motif }}", 10, 50);
+
+        {% for vehicule in vehicules_reserves %}
+            doc.text("Véhicule :", 10, 60);
+            doc.text("Marque : {{ vehicule.marque }}", 10, 70);
+            doc.text("Modèle : {{ vehicule.modele }}", 10, 80);
+            doc.text("Plaque d'immatriculation : {{ vehicule.numéro_immatriculation }}", 10, 90);
+            doc.text("Kilométrage : {{ vehicule.kilometrage }}", 10, 100);
+            doc.text("Année : {{ vehicule.annee_fabrication }}", 10, 110);
+        {% endfor %}
+
+        doc.save("reservation.pdf");
     });
 </script>
+
+
+
+
+
 {% endblock %}

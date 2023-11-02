@@ -3,6 +3,14 @@
 {% load static %}
 
 {% block content %}
+<div class="container-fluid">
+  <div class="row column_title">
+     <div class="col-md-12">
+        <div class="page_title">
+           <h2>Reservation Validee </h2>
+        </div>
+     </div>
+  </div> 
   <h1>Réservation validée avec succès !</h1>
   <p>Merci d'avoir validé cette réservation. Les détails de la réservation ont été envoyés à l'employé.</p>
   <a href="{% url 'gerer_reservations_attente' %}" class="btn btn-primary">Retour à la gestion des réservations</a>

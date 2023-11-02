@@ -207,14 +207,14 @@ LOGIN_REDIRECT_URL = 'home'
 # LOGOUT_REDIRECT_URL= 'login'
 
 # simuler l’envoi d’e-mail de réinitialisation de mot de passe sur console.
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587  # Port SMTP de Gmail
-# EMAIL_USE_TLS = True  # Utilisez TLS pour la sécurité
-# EMAIL_HOST_USER = 'ehm.diallo3@gmail.com'  # Votre adresse e-mail Gmail
-# EMAIL_HOST_PASSWORD = 'M0ct@r0945'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # Port SMTP de Gmail
+EMAIL_USE_TLS = True  # Utilisez TLS pour la sécurité
+EMAIL_HOST_USER = 'moctardiallo1916@gmail.com'  # Votre adresse e-mail Gmail
+EMAIL_HOST_PASSWORD = 'nqwswjgtsbxsbudb'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
 
 #######################################
 #API NOTIFICATION TWILIO

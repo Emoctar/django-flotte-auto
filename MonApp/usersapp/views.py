@@ -45,7 +45,7 @@ class CustomLoginView(LoginView):
         elif self.request.user.groups.filter(name='Gestionnaire Intervention').exists():
             return reverse_lazy('gestionnaire_intervention_profile')
         else:
-            # Redirection par défaut pour les autres utilisateurs (vous pouvez personnaliser)
+            # Redirection par défaut pour les autres utilisateurs 
             return reverse_lazy('home')  # Redirigez vers la page d'accueil par défaut
         
 from django.contrib.auth.views import PasswordResetDoneView
@@ -57,8 +57,14 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 from django.contrib.auth.views import PasswordResetConfirmView
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = 'registration/password_reset_confirm.html'  # Spécifiez le modèle personnalisé ici
-    success_url = reverse_lazy('login')  #
+    template_name = 'registration/mypassword_reset_confirm.html'  # Spécifiez le modèle personnalisé ici
+    success_url = reverse_lazy('login')  
+    
+from django.contrib.auth.views import PasswordResetView
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset.html'
+    success_url = reverse_lazy('mypassword_reset_done')
+    
     
 
 from django.contrib.auth import logout

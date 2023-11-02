@@ -1,80 +1,170 @@
 {% extends 'Employe/home_emp.html' %}   
 {%load static%}         
    {%block content%}       
-      <div class="midde_cont">
-
-                  <div class="container-fluid">
-                     <div class="row column_title">
-                        <div class="col-md-12">
-                           <div class="page_title">
-                              <h2>Mon Espace Reservation </h2>
-                           </div>
-                        </div>
-                     </div> 
-                     <div class="container">
-                        <div class="row">
-                            <div class="col-md-8 offset-md-2">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h2 class="card-title">Réservation de Voiture</h2>
-                                    </div>
-                                    <div class="card-body">
-                                        <form method="post" class="form-horizontal">
-                                            {% csrf_token %}
-                                            {% if messages %}
-                                            <div class="alert alert-success">
-                                                {% for message in messages %}
-                                                    {{ message }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                            <div class="form-group row">
-                                                <label for="date_debut" class="col-sm-4 col-form-label">Date de début :</label>
-                                                <div class="col-sm-8">
-                                                    <input type="datetime-local" class="form-control" id="date_debut" name="date_debut" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="date_fin" class="col-sm-4 col-form-label">Date de fin :</label>
-                                                <div class="col-sm-8">
-                                                    <input type="datetime-local" class="form-control" id="date_fin" name="date_fin" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="destination" class="col-sm-4 col-form-label">Destination :</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" class="form-control" id="destination" name="destination" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="motif" class="col-sm-4 col-form-label">Motif :</label>
-                                                <div class="col-sm-8">
-                                                    <textarea class="form-control" id="motif" name="motif" required></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="{{ form.vehicules.id_for_label }}" class="col-sm-4 col-form-label">Véhicules :</label>
-                                                <div class="col-sm-8">
-                                                    {{ form.vehicules }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-offset-4 col-sm-8">
-                                                    <button type="submit" class="btn btn-primary">Réserver</button>
-                                                </div>
-                                                <div class="text-right">
-                                                    <a href="{% url 'liste_vehicules_disponible' %}" class="btn btn-secondary">
-                                                        <i class="bi bi-car"></i> Liste des véhicules
-                                                    </a>
-                                                </div>
-                                    
-                                            </div>
-                                        </form>
-                                    </div>
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Réservation de Véhicules</title>
+       <link rel="stylesheet" href="{% static 'styles.css' %}">
+   </head>
+   <body>
+    <div class="midde_cont">
+        <div class="container-fluid">
+            <div class="row column_title">
+                <div class="col-md-12">
+                    <div class="page_title">
+                        <h2>Ajouter Véhicule</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="add-vehicle-form white_shd">
+                      
+                        <div class="container">
+                            <div id="messages-container">
+                                {% if messages %}
+                                {% for message in messages %}
+                                <div class="message alert alert-{{ message.tags }}">
+                                    {{ message }}
                                 </div>
+                                {% endfor %}
+                                {% endif %}
                             </div>
+                            <h1>Réservation de Véhicules</h1>
+                            <form method="post" class="reservation-form">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="date_debut">Date de début :</label>
+                                    <input type="datetime-local" class="form-control" id="date_debut" name="date_debut" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="date_fin">Date de fin :</label>
+                                    <input type="datetime-local" class="form-control" id="date_fin" name="date_fin" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="destination">Destination :</label>
+                                    <input type="text" class="form-control" id="destination" name="destination" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="motif">Motif :</label>
+                                    <textarea class="form-control" id="motif" name="motif" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="vehicules">Véhicules :</label>
+                                    {{ form.vehicules }}
+                                </div>
+                                <button type="submit" class="btn btn-primary">Réserver</button>
+                            </form>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+   </body>
+</html>
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        font-weight: bold;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    textarea.form-control {
+        height: 100px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+    }
+    
+    .message {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    animation: slide-up 0.5s ease;
+    }
+
+    .alert-success {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .alert-error {
+        background-color: #f44336;
+        color: white;
+    }
+
+    @keyframes slide-up {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+<script>
+    // Sélectionnez tous les éléments de message avec la classe 'message'
+    var messages = document.querySelectorAll('.message');
+
+    // Parcourez chaque message
+    messages.forEach(function(message) {
+        // Affichez le message
+        message.style.display = 'block';
+
+        // Programmez la disparition du message après 5 secondes
+        setTimeout(function() {
+            message.style.display = 'none';
+        }, 5000);
+    });
+</script>
+</html>
+
                     
-   {%endblock%}            
+{%endblock%}            
+
+
+
+

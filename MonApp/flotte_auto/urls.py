@@ -13,6 +13,7 @@ urlpatterns = [
     #######################3
     
     path('', views.index, name='index'),
+    
     # path('home/', views.home, name='home'),
     # URLs pour les modèles Vehicule, GestionnaireParc, GestionnaireConsommation, GestionnaireIntervention, Employé
    path('gestionnaire_parc_profile/creer_vehicule/', views.creer_vehicule, name='creer_vehicule'),
@@ -40,6 +41,12 @@ urlpatterns = [
     path('gestionnaire_parc_profile/reservation/<int:reservation_id>/', views.details_reservation, name='details_reservation'),
     path('gestionnaire_parc_profile/confirmation_validation/', views.confirmation_validation, name='confirmation_validation'),
     
+     path('gestionnaire_parc_profile/gerer_reservations_accepter/', views.gerer_reservations_accepter, name='gerer_reservations_accepter'),
+     path('gestionnaire_parc_profile/refuser_reservation/<int:reservation_id>/', views.refuser_reservation, name='refuser_reservation'),
+     
+      path('gestionnaire_parc_profile/gerer_reservations_refuse/', views.gerer_reservations_refuse, name='gerer_reservations_refuse'),
+    # Autres chemins URL pour d'autres vues
+
     
     path('creer_itineraire/', views.creer_itineraire, name='creer_itineraire'),
     path('modifier_itineraire/<int:itineraire_id>/', views.modifier_itineraire, name='modifier_itineraire'),
@@ -48,11 +55,12 @@ urlpatterns = [
 
   
     # Vues liées aux données de consommation de carburant
-    path('enregistrer_données_consommation/', views.enregistrer_données_consommation, name='enregistrer_données_consommation'),
-    path('modifier_donnees_consommation/<int:données_consommation_id>/', views.modifier_données_consommation, name='modifier_donnees_consommation'),
-    path('supprimer_donnees_consommation/<int:donnees_consommation_id>/', views.supprimer_donnees_consommation, name='supprimer_donnees_consommation'),
-    path('liste_donnees_consommation_carburant/', views.liste_données_consommation_carburant, name='liste_donnees_consommation_carburant'),
-
+    path('gestionnaire_parc_profile/enregistrer_donnees_consommation/', views.enregistrer_donnees_consommation, name='enregistrer_donnees_consommation'),
+    # path('modifier_donnees_consommation/<int:données_consommation_id>/', views.modifier_données_consommation, name='modifier_donnees_consommation'),
+    # path('supprimer_donnees_consommation/<int:donnees_consommation_id>/', views.supprimer_donnees_consommation, name='supprimer_donnees_consommation'),
+    path('gestionnaire_parc_profile/liste_donnees_consommation_carburant/', views.liste_donnees_consommation_carburant, name='liste_donnees_consommation_carburant'),
+    path('gestionnaire_parc_profile/suivi_consommation/', views.suivi_consommation, name='suivi_consommation'),
+    
     # Vues liées aux coûts
     path('enregistrer_cout/', views.enregistrer_cout, name='enregistrer_cout'),
     path('modifier_cout/<int:cout_id>/', views.modifier_cout, name='modifier_cout'),

@@ -7,27 +7,27 @@
 </head>
 
 <body>
-<div class="midde_cont">
-    <div class="container-fluid">
-        <div class="row column_title">
-            <div class="col-md-12">
-                <div class="page_title">
-                    <h2>Espace Vehicules</h2>
+    <div class="midde_cont">
+        <div class="container-fluid">
+            <div class="row column_title">
+                <div class="col-md-12">
+                    <div class="page_title">
+                        <h2>Espace Vehicules</h2>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <!-- Formulaire de modification -->
-                <div class="white_shd full margin_bottom_30">
-                    <div class="full graph_head">
-                        <div class="heading1 margin_0">
-                            <h2>Liste des vehicules</h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Formulaire de modification -->
+                    <div class="white_shd full margin_bottom_30">
+                        <div class="full graph_head">
+                            <div class="heading1 margin_0">
+                                <h2>Liste des vehicules</h2>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         <div class="full price_table padding_infor_info">
             <div class="row">
                 <div class="col-md-12">
@@ -53,16 +53,17 @@
                                     <td>{{ vehicule.annee_fabrication }}</td>
                                     <td>{{ vehicule.kilometrage }}</td>
                                     <td>
-                                        {% if vehicule.statut %}
-                                            <span class="badge bg-success">Disponible</span>
-                                        {% elif vehicule.statut %}
-                                            <span class="badge bg-warning">En entretien</span>
-                                        {% elif vehicule.statut %}
-                                            <span class="badge bg-danger">Réservé</span>
-                                        {% elif vehicule.statut %}
-                                            <span class="badge bg-danger">Indisponible</span>
+                                        {% if vehicule.statut == 'Disponible' %}
+                                            <span class="text-success">Disponible</span>
+                                        {% elif vehicule.statut == 'En entretien' %}
+                                            <span class="text-warning">En entretien</span>
+                                        {% elif vehicule.statut == 'Réservé' %}
+                                            <span class="text-danger">Réservé</span>
+                                        {% else %}
+                                            <span class="text-danger">Indisponible</span>
                                         {% endif %}
                                     </td>
+                                    
                                     <td>
                                         <a href="{% url 'modifier_vehicule' vehicule.id %}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
                                         <a href="{% url 'ajouter_assurance' vehicule.id %}" class="btn btn-primary btn-sm">
