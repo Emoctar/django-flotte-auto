@@ -1,5 +1,5 @@
 {% extends 'GesIntervention/GesInterv_home.html' %}
-{%load static%}
+{% load static %}
 
 {% block content %}
 
@@ -30,7 +30,7 @@
                     <div class="col-md-12">
                         
                         <table id="maintenanceTable" class="table table-striped">
-                        <!-- ... (code précédent) ... -->
+                            <!-- ... (code précédent) ... -->
                             <thead>
                                 <tr>
                                     <th>Numéro</th>
@@ -52,18 +52,40 @@
                                     <td>{{ maintenance.cout }}</td>
                                     <td>{{ maintenance.prochaine_maintenance }}</td>
                                     <td>
+                                        <a href="{% url 'terminer_maintenance' maintenance.id %}" class="btn btn-success btn-sm">
+                                            Terminer
+                                        </a>
                                         <a href="{% url 'modifier_maintenance' maintenance.id %}" class="btn btn-primary btn-sm">
                                             <i class="fas fa-info-circle"></i> 
                                         </a>
-                                        <a href="{% url 'supprimer_maintenance' maintenance.id %}" class="btn btn-danger">
-                                            <i class="fas fa-trash"></i> 
-                                        </a>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDelete{{ maintenance.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <!-- Modal de confirmation de suppression -->
+                                        <div class="modal fade" id="confirmDelete{{ maintenance.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="confirmDeleteLabel">Confirmation de suppression</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Êtes-vous sûr de vouloir supprimer cette maintenance ?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                                        <a href="{% url 'supprimer_maintenance' maintenance.id %}" class="btn btn-danger">Supprimer</a>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
-
-
                         </table>
                     </div>
                 </div>
@@ -71,8 +93,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>

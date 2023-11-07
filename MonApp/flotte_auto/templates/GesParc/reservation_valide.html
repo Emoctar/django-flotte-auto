@@ -2,98 +2,89 @@
 {% load static %}
 
 {% block content %}
-  <div class="container mt-5">
+<div class="container mt-5">
     <h2 class="mb-4">Historique des Réservations Validées</h2>
     <div class="table-responsive">
-      <table id="reservationsTable" class="table table-striped table-bordered table-hover">
-        <thead class="thead-dark">
-          <tr>
-            <th>ID Réservation</th>
-            <th>Date de début</th>
-            <th>Date de fin</th>
-            <th>Destination</th>
-            <th>E-mail</th>
-            <th>Nom</th>
-            <th>Numéro de téléphone</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for reservation in reservations_valide %}
-            <tr>
-              <td>{{ reservation.id }}</td>
-              <td>{{ reservation.date_debut }}</td>
-              <td>{{ reservation.date_fin }}</td>
-              <td>{{ reservation.destination }}</td>
-              <td>{{ reservation.employe.email }}</td>
-              <td>{{ reservation.employe.get_full_name }}</td>
-              <td>{{ employ.employe.telephone }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+        <table id="reservationsTable" class="table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID Réservation</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Destination</th>
+                    <th>E-mail</th>
+                    <th>Nom</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations_valide %}
+                <tr>
+                    <td>{{ reservation.id }}</td>
+                    <td>{{ reservation.date_debut }}</td>
+                    <td>{{ reservation.date_fin }}</td>
+                    <td>{{ reservation.destination }}</td>
+                    <td>{{ reservation.employe.email }}</td>
+                    <td>{{ reservation.employe.get_full_name }}</td>
+                    <td class="text-center icon-actions">
+                        <form id="terminerForm" action="{% url 'terminer_reservation' reservation.id %}" method="post"
+                            style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning btn-sm"
+                                onclick="return confirm('Êtes-vous sûr de vouloir terminer cette réservation ?');">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </form>
+                        <a href="{% url 'details_reservation' reservation.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="{% url 'enregistrer_donnees_consommation' reservation.id %}"
+                            class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            data-target="#deleteModal{{ reservation.id }}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <div class="modal" id="deleteModal{{ reservation.id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="deleteModalLabel{{ reservation.id }}" aria-hidden="true">
+                    <!-- Modal content here -->
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-  </div>
+</div>
 
+<div id="success-message" class="alert alert-success" style="display: none; position: fixed; top: 10px; right: 10px;">
+    L'e-mail a été envoyé avec succès.
+</div>
 
-  <style>
-    .container {
-        margin-top: 50px;
-    }
-
-    h2 {
-        color: #333;
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th, td {
-        text-align: left;
-        padding: 12px;
-    }
-
-    th {
-        background-color: #6c757d;
-        color: #fff;
-    }
-
-    tbody tr:nth-of-type(even) {
-        background-color: #f2f2f2;
-    }
-
-    tbody tr:hover {
-        background-color: #e2e2e2;
-    }
-
-    .btn-info {
-        color: #fff;
-        background-color: #17a2b8;
-        border-color: #17a2b8;
-    }
-
-    .btn-info:hover {
-        color: #fff;
-        background-color: #138496;
-        border-color: #117a8b;
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<style>
+    .icon-actions {
+        display: flex;
+        justify-content: space-around;
     }
 </style>
+<script>
+    $(document).ready(function () {
+        $('#reservationsTable').DataTable();
 
+        var successMessage = document.getElementById("success-message");
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
-  <script>
-    $(document).ready(function() {
-      $('#reservationsTable').DataTable();
+        if (successMessage) {
+            successMessage.style.display = "block";
+            setTimeout(function () {
+                successMessage.style.display = "none";
+            }, 5000);
+        }
     });
-  </script>
-
-
-
+</script>
 {% endblock %}

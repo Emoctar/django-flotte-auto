@@ -64,6 +64,11 @@
                 <div class="sidebar_blog_2">
                   <h4>General</h4>
                   <ul class="list-unstyled components">
+                     <li>
+                        <a class="nav-link" href="{% url 'liste_toutes_reservations' %}">
+                           <i class="fa fa-history mr-2"></i> Historique des Réservations
+                       </a>
+                     </li>
                      
                      <li><a href="{%url 'gestionnaire_parc_profile'%}"><i class="fa fa-dashboard yellow_color "></i> <span>Dashbord</span></a></li>
                      <li>
@@ -88,7 +93,6 @@
                      <li>
                         <a href="#apps" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa-solid fa-gas-pump" style="color: #f47710;"></i> <span>Gerer Consommation</span></a>
                         <ul class="collapse list-unstyled" id="apps">
-                           <li><a href="{%url 'enregistrer_donnees_consommation' %}"> <span>Nouvelle Consommation</span></a></li>
                            <li><a href="{%url 'liste_donnees_consommation_carburant'%}"> <span>Historique Consommation</span></a></li>
                            
                         </ul>
@@ -120,21 +124,21 @@
                         </div>
                         <div class="right_topbar">
                            <div class="icon_info">
-                              <ul>
+                              <!-- <ul>
                                  <li id="notification">
                                     <a href="#"><i class="fa fa-bell-o"></i><span id="notification-count" class="badge"></span></a>
                                     
                                 </li>
                                  <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
                                  <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
-                              </ul>
+                              </ul> -->
                               <ul class="user_profile_dd">
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{ user.gestionnaireparc.photo.url }}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="#">My Profile</a>
+                                       <a class="dropdown-item" href="#">Mon Profile</a>
                                        
-                                       <a class="dropdown-item" href="{%url 'logout'%}"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                                       <a class="dropdown-item" href="{%url 'logout'%}"><span>Deconnexion</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
                                  </li>
                               </ul>
@@ -150,7 +154,7 @@
                   <!-- footer -->
                   <div class="container-fluid">
                      <div class="footer">
-                        <p>Copyright © 2018 Designed by html.design. All rights reserved.</p>
+                        <p>Copyright © 2023 My<span style="color: #f47710;">Fleet</span> Tout Droit Réservé.</p>
                      </div>
                   </div>
                </div>
@@ -187,6 +191,17 @@
             <!-- fancy box js -->
             <script src="{%static 'style/js/jquery-3.3.1.min.js'%}"></script>
             <script src="{%static 'style/js/jquery.fancybox.min.js'%}"></script>
+
+            <script>
+               $(document).ready(function() {
+                   $('#reservationTable').DataTable({
+                       paging: true,
+                       searching: true,
+                       ordering: true,
+                       info: true
+                   });
+               });
+           </script>
 
             <script>
                 $(document).ready(function() {

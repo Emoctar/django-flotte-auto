@@ -1,7 +1,36 @@
 {% extends 'GesIntervention/GesInterv_home.html' %}
-{%load static%}
+{% load static %}
 
 {% block content %}
+
+<style>
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        padding: 10px;
+        margin-bottom: 15px;
+      }
+      
+      /* CSS pour les messages d'erreur */
+      .alert-error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        padding: 10px;
+        margin-bottom: 15px;
+      }
+
+
+</style>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="midde_cont">
     <div class="container-fluid">
         <div class="row column_title">
@@ -27,30 +56,29 @@
             <h2>Ajouter une Maintenance</h2><br>
             <form method="post">
                 {% csrf_token %}
-
                 <div class="form-group">
                     <label for="id_vehicule">Véhicule :</label>
                     {{form.vehicule}}
                   </div>
-            
+
                 <div class="form-group">
-                  <label for="id_date_maintenance">Date de Maintenance :</label>
-                  <input type="datetime-local" name="date_maintenance" id="id_date_maintenance" class="form-control">
+                    <label for="id_date_maintenance">Date de Maintenance :</label>
+                    <input type="datetime-local" name="date_maintenance" id="id_date_maintenance" class="form-control">
                 </div>
-            
+
                 <div class="form-group">
-                  <label for="id_description">Description :</label>
-                  <textarea name="description" id="id_description" class="form-control"></textarea>
+                    <label for="id_description">Description :</label>
+                    <textarea name="description" id="id_description" class="form-control"></textarea>
                 </div>
-            
+
                 <div class="form-group">
-                  <label for="id_cout">Coût :</label>
-                  <input type="number" name="cout" id="id_cout" step="0.01" class="form-control">
+                    <label for="id_cout">Coût :</label>
+                    <input type="number" name="cout" id="id_cout" step="0.01" class="form-control">
                 </div>
-                
+
                 <!-- Champ caché pour la prochaine maintenance -->
                 <input type="hidden" name="prochaine_maintenance" id="id_prochaine_maintenance">
-                
+
                 <!-- Ajoutez d'autres champs ici selon votre modèle Maintenance -->
 
                 <button type="submit" class="btn btn-primary">Ajouter Maintenance</button>
@@ -68,7 +96,4 @@
         document.getElementById('id_prochaine_maintenance').value = formattedDate;
     });
 </script>
-
-  
-
 {% endblock %}

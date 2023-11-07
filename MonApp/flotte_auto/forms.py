@@ -39,29 +39,18 @@ class MaintenanceForm(forms.ModelForm):
         model = Maintenance
         fields = ['vehicule', 'date_maintenance', 'description', 'cout']
     
-    vehicule = forms.ModelChoiceField(queryset=Vehicule.vehicules_disponibles(), empty_label="Sélectionnez un véhicule")
+    vehicule = forms.ModelChoiceField(queryset=Vehicule.objects.all(), empty_label="Sélectionnez un véhicule")
 
 
 
 
-# class ReservationVoitureForm(forms.ModelForm):
-#     vehicules = forms.ModelMultipleChoiceField(
-#         queryset=Vehicule.objects.all(),
-#         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
-#     )
-
-#     class Meta:
-#         model = ReservationVoiture
-#         fields = ['date_debut', 'date_fin', 'destination', 'motif', 'vehicules']
-
-   
 
 class ReservationVoitureForm(forms.ModelForm):
     vehicules = forms.ModelMultipleChoiceField(
-        queryset=Vehicule.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        queryset=Vehicule.objects.filter(statut='Disponible'),
+        widget=forms.SelectMultiple(attrs={'class': 'select2', 'data-placeholder': 'Sélectionnez les véhicules'}),
     )
-
+    
     class Meta:
         model = ReservationVoiture
         fields = ['date_debut', 'date_fin', 'destination', 'motif', 'vehicules']
@@ -70,10 +59,11 @@ class ReservationVoitureForm(forms.ModelForm):
         vehicules = self.cleaned_data.get('vehicules')
 
         # Assurez-vous que l'employé ne sélectionne pas plus de 3 véhicules
-        if vehicules.count() > 3:
+        if len(vehicules) > 3:
             raise forms.ValidationError("Vous ne pouvez sélectionner que 3 véhicules au maximum.")
 
         return vehicules
+
 
 
 
@@ -150,3 +140,21 @@ class ConsommationCarburantForm(forms.ModelForm):
     class Meta:
         model = ConsommationCarburant
         fields = ['vehicule', 'date', 'quantite_carburant', 'distance_parcourue']
+        widgets = {
+            'reservation': forms.HiddenInput(),
+        }
+        
+        
+
+
+
+class PanneForm(forms.ModelForm):
+    class Meta:
+        model = Panne
+        fields = ['vehicule', 'description', 'type_panne', 'commentaire','statut', 'conducteur']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+            'commentaire': forms.Textarea(attrs={'rows': 4}),
+            'type_panne': forms.Select(choices=Panne.TYPE_PANNE_CHOICES),
+        }
+

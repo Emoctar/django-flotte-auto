@@ -15,66 +15,123 @@
     <!-- row -->
     <div class="row justify-content-center">
         <div class="col-md-12">
-
-                <div class="white_shd full margin_bottom_30">
-                    <div class="full graph_head">
-                        <div class="heading1 margin_0">
-                            <h2>Details Conducteurs</h2>
-                        </div>
+            <div class="white_shd full margin_bottom_30">
+                <div class="full graph_head">
+                    <div class="heading1 margin_0">
+                        <h2>Details Conducteurs</h2>
                     </div>
-                    <br>
-                    
-                        
-
-    
-                        <div class="row justify-content-center">
-                            {% for conducteur in conducteurs %}
-                            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 profile_details margin_bottom_30">
-                                <div class="contact_blog">
-                                    <h4 class="brief">Conducteur numero : {{conducteur.id}}</h4>
-                                    <div class="contact_inner">
-                                        <div class="left">
-                                            <h3>{{ conducteur.nom }} {{ conducteur.prenom }}</h3>
-                                            <p><strong>Numero Permis: </strong>{{ conducteur.numero_permis_conduire }}</p>
-                                            <ul class="list-unstyled">
-                                                <li><i class="fa-solid fa-calendar-days"></i> : {{ conducteur.horaires_travail }}</li>
-                                                <li><i class="fa fa-phone"></i> : {{ conducteur.telephone }}</li>
-                                            </ul>
-                                        </div>
-                                        <div class="right">
-                                            <div class="profile_contacts">
-                                                <img class="img-responsive" src="{{conducteur.photo.url}}" alt="#" />
-                                            </div>
-                                        </div>
-                                        <div class="bottom_list">
-                                            <div class="left_rating">
-                                                <p class="ratings">
-                                                    <a href="#"><span class="fa fa-star"></span></a>
-                                                    <a href="#"><span class="fa fa-star"></span></a>
-                                                    <a href="#"><span class="fa fa-star"></span></a>
-                                                    <a href="#"><span class="fa fa-star"></span></a>
-                                                    <a href="#"><span class="fa fa-star-o"></span></a>
-                                                </p>
-                                            </div>
-                                            <div class="right_button">
-                                                <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user"></i> <i class="fa fa-comments-o"></i> </button>
-                                                <a href="{% url 'modifier_conducteur' conducteur.id %}" class="btn btn-success btn-xs">
-                                                    <i class="fa fa-pencil"></i> Modifier
-                                                </a>
-                                            
-                                                <a href="{% url 'supprimer_conducteur' conducteur.id %}" class="btn btn-danger btn-xs" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce conducteur ?')">
-                                                    <i class="fa fa-trash"></i> Supprimer
-                                                </a>
-                                            </div>
-                                        </div>
+                </div>
+                <br>
+                <div class="row justify-content-center">
+                    {% for conducteur in conducteurs %}
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 profile_details margin_bottom_30">
+                        <div class="contact_blog">
+                            <h4 class="brief">Conducteur numero : {{conducteur.id}}</h4>
+                            <div class="contact_inner">
+                                <div class="left">
+                                    <h3>{{ conducteur.nom }} {{ conducteur.prenom }}</h3>
+                                    <p><strong>Numero Permis: </strong>{{ conducteur.numero_permis_conduire }}</p>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa-solid fa-calendar-days"></i> : {{ conducteur.horaires_travail }}</li>
+                                        <li><i class="fa fa-phone"></i> : {{ conducteur.telephone }}</li>
+                                    </ul>
+                                </div>
+                                <div class="right">
+                                    <div class="profile_contacts">
+                                        <img class="img-responsive" src="{{conducteur.photo.url}}" alt="#" />
+                                    </div>
+                                </div>
+                                <div class="bottom_list">
+                                    <div class="left_rating">
+                                        <p class="ratings">
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                        </p>
+                                    </div>
+                                    <div class="right_button">
+                                        <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal{{ conducteur.id }}"> <i class="fa fa-user"></i> <i class="fa fa-comments-o"></i> </button>
+                                        <a href="{% url 'modifier_conducteur' conducteur.id %}" class="btn btn-success btn-xs">
+                                            <i class="fa fa-pencil"></i> Modifier
+                                        </a>
+                                        <a href="{% url 'supprimer_conducteur' conducteur.id %}" class="btn btn-danger btn-xs" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce conducteur ?')">
+                                            <i class="fa fa-trash"></i> Supprimer
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                            {% endfor %}
                         </div>
                     </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal{{ conducteur.id }}" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Envoyer un SMS au conducteur</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="smsForm">
+                                        <div class="form-group">
+                                            <label for="message">Message :</label>
+                                            <textarea class="form-control" rows="5" id="message"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" onclick="envoyerSMS()">Envoyer</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        function envoyerSMS() {
+                            var message = document.getElementById('message').value;
+                            var apiKey = 'NGQ2Mzc4MzM1MDYyNzE1MzMyNGE3OTZlNzg0ZDU2NDU=';
+                            var sender = '781397254';
+                            var numbers = '{{ conducteur.telephone }}'; // Récupérer le numéro de téléphone du conducteur de la variable de modèle
+                
+                            // Paramètres pour l'appel d'API
+                            var data = {
+                                'apikey': apiKey,
+                                'numbers': numbers,
+                                'message': message,
+                                'sender': sender
+                            };
+                
+                            // Appel d'API AJAX
+                            $.ajax({
+                                url: 'https://api.textlocal.in/send/',
+                                method: 'POST',
+                                data: data,
+                                success: function (response) {
+                                    // Traitement de la réponse
+                                    alert("Message envoyé : " + message + " au numéro : " + numbers);
+                                },
+                                error: function (error) {
+                                    // Gestion des erreurs
+                                    console.error('Une erreur s\'est produite lors de l\'envoi du SMS : ', error);
+                                }
+                            });
+                        }
+                    </script>
+                
+                    
+                    {% endfor %}
                 </div>
             </div>
-            
+        </div>
+    </div>
 </div>
+
+<!-- Scripts JavaScript nécessaires pour le fonctionnement de la fenêtre modale -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
 {% endblock %}

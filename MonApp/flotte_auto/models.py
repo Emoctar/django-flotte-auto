@@ -5,10 +5,28 @@ from django.utils import timezone
 # Create your models here.
 from django.db import models
 
+class Assurance(models.Model):
+    
+    CHOIX_COMPAGNIE = (
+        ('Axa', 'Axa'),
+        ('NSIA', 'NSIA'),
+        ('CNART', 'CNART'),
+        ('SenAssurance', 'SenAssurance'),
+    )
+    compagnie_assurance = models.CharField(max_length=100, choices=CHOIX_COMPAGNIE)
+    numero_police = models.CharField(max_length=50)
+    date_debut = models.DateField()
+    date_fin = models.DateField()
+    prime_annuelle = models.DecimalField(max_digits=10, decimal_places=2)
+    statut=models.CharField(max_length=50, default='Valide')
+
+    def __str__(self):
+        return f"Assurance de {self.compagnie_assurance}"
 
 
 
 class Vehicule(models.Model):
+    assurance = models.ForeignKey(Assurance, on_delete=models.CASCADE)
     marque = models.CharField(max_length=255)
     modele = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='photos/', blank=True, null=True)
@@ -25,6 +43,7 @@ class Vehicule(models.Model):
     )
     
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='Disponible')
+    
     
     
     @classmethod
@@ -60,14 +79,21 @@ class Vehicule(models.Model):
                 return quantite_totale / distance_totale
         return 0 
     
-    def calculer_taux_consommation_moyen(self, start_date, end_date):
-        consommations = ConsommationCarburant.objects.filter(vehicule=self, date__range=[start_date, end_date])
-        total_fuel = sum(consommation.quantite_carburant for consommation in consommations)
-        total_distance = sum(consommation.distance_parcourue for consommation in consommations)
-        if total_distance != 0:
-            return total_fuel / total_distance
-        else:
-            return 0
+    # def calculer_taux_consommation_moyen(self, start_date, end_date):
+    #     consommations = ConsommationCarburant.objects.filter(vehicule=self, date__range=[start_date, end_date])
+    #     total_fuel = sum(consommation.quantite_carburant for consommation in consommations)
+    #     total_distance = sum(consommation.distance_parcourue for consommation in consommations)
+    #     if total_distance != 0:
+    #         return total_fuel / total_distance
+    #     else:
+    #         return 0
+        
+    def en_maintenance(self):
+        return self.maintenance_set.filter(vehicule=self, en_cours=True).exists()
+    
+    def en_panne(self):
+        return self.panne_set.filter(statut='En cours').exists()
+
 
 
 ##########################################################
@@ -123,7 +149,24 @@ class ReservationVoiture(models.Model):
     date_demande = models.DateTimeField(auto_now_add=True,null=True)
     date_debut = models.DateTimeField()
     date_fin = models.DateTimeField()
-    destination = models.CharField(max_length=200)
+    REGIONS_CHOICES = [
+        ('Dakar', 'Dakar'),
+        ('Diourbel', 'Diourbel'),
+        ('Fatick', 'Fatick'),
+        ('Kaffrine', 'Kaffrine'),
+        ('Kaolack', 'Kaolack'),
+        ('Kédougou', 'Kédougou'),
+        ('Kolda', 'Kolda'),
+        ('Louga', 'Louga'),
+        ('Matam', 'Matam'),
+        ('Saint-Louis', 'Saint-Louis'),
+        ('Sédhiou', 'Sédhiou'),
+        ('Tambacounda', 'Tambacounda'),
+        ('Thiès', 'Thiès'),
+        ('Ziguinchor', 'Ziguinchor'),
+    ]
+
+    destination = models.CharField(max_length=200, choices=REGIONS_CHOICES)
     motif = models.TextField()
     statut = models.CharField(max_length=20, default='En attente')  # Statut de la réservation (En attente/Validée/Refusée)
     vehicules = models.ManyToManyField(Vehicule)  # Véhicule réservé (peut être vide si en attente)
@@ -166,6 +209,9 @@ class Maintenance(models.Model):
     description = models.TextField()
     cout = models.DecimalField(max_digits=10, decimal_places=2)
     prochaine_maintenance = models.DateTimeField()  # Ajoutez ce champ
+    en_cours = models.BooleanField(default=True)
+                                   
+                    
     
     def save(self, *args, **kwargs):
         # Calculez la date de la prochaine maintenance en ajoutant 1 mois à la date actuelle
@@ -225,6 +271,7 @@ class Cout(models.Model):
     
 class ConsommationCarburant(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.CASCADE)
+    reservation = models.ForeignKey(ReservationVoiture, on_delete=models.CASCADE)
     date = models.DateField()
     quantite_carburant = models.DecimalField(max_digits=6, decimal_places=2)  # En litres
     distance_parcourue = models.DecimalField(max_digits=6, decimal_places=2)  # En kilomètres
@@ -237,14 +284,37 @@ class NoteConducteur(models.Model):
     note = models.IntegerField()
     commentaire=models.TextField()
     
-class Assurance(models.Model):
-    vehicule = models.ForeignKey('Vehicule', on_delete=models.CASCADE)
-    compagnie_assurance = models.CharField(max_length=100)
-    numero_police = models.CharField(max_length=50)
-    date_debut = models.DateField()
-    date_fin = models.DateField()
-    prime_annuelle = models.DecimalField(max_digits=10, decimal_places=2)
-    statut=models.CharField(max_length=50, default='Valide')
 
-    def __str__(self):
-        return f"Assurance de {self.vehicule} ({self.compagnie_assurance})"
+
+
+
+class Panne(models.Model):
+    vehicule = models.ForeignKey(Vehicule, on_delete=models.CASCADE)
+    description = models.TextField()
+    date_signalement = models.DateTimeField(auto_now_add=True)
+    date_fin_intervention = models.DateTimeField(blank=True, null=True)
+    TYPE_PANNE_CHOICES = [
+        ('Mécanique', 'Mécanique'),
+        ('Electrique', 'Electrique'),
+        ('Pneumatique', 'Pneumatique'),
+        ('Carrosserie', 'Carrosserie'),
+        ('Système de freinage', 'Système de freinage'),
+        ('Système de transmission', 'Système de transmission'),
+        ('Climatisation', 'Climatisation'),
+        ('Système de refroidissement', 'Système de refroidissement'),
+        ('Autre', 'Autre'),
+    ]
+    type_panne = models.CharField(max_length=30, choices=TYPE_PANNE_CHOICES, default='Autre')
+    statut = models.CharField(max_length=20, default='En cours')  # Statut de la panne (En cours/Cloture)
+    commentaire = models.TextField(blank=True, null=True)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.CASCADE, blank=True, null=True)
+
+
+    def marquer_en_cours(self):
+        self.statut = 'En cours'
+        self.save()
+
+    def marquer_resolue(self):
+        self.statut = 'Résolue' 
+        self.date_fin_intervention = timezone.now()
+        self.save()

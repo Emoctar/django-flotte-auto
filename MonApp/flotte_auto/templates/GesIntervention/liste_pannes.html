@@ -1,0 +1,129 @@
+{% extends 'GesIntervention/GesInterv_home.html' %}
+
+{% block content %}
+<div class="midde_cont">
+    <div class="container-fluid">
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Gestion des Pannes</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="pannesTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Véhicule</th>
+                    <th>Conducteur</th>
+                    <th>Type de panne</th>
+                    <th>Date de signalement</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for panne in pannes %}
+                <tr>
+                    <td>{{ panne.id }}</td>
+                    <td>{{ panne.vehicule }}</td>
+                    <td>{{ panne.conducteur }}</td>
+                    <td>{{ panne.type_panne }}</td>
+                    <td>{{ panne.date_signalement }}</td>
+                    <td>{{ panne.statut }}</td>
+                    <td>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ panne.id }}">
+                            <i class="fas fa-eye"></i> 
+                        </button>
+                        <a href="{% url 'modifier_panne' panne.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> </a>
+                        <a href="{% url 'supprimer_panne' panne.id %}" class="btn btn-danger"><i class="fas fa-trash"></i> </a>
+                    </td>
+                </tr>
+                <!-- Modal -->
+                <div class="modal fade" id="detailsModal{{ panne.id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ panne.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsModalLabel{{ panne.id }}">Détails de la panne</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>ID : {{ panne.id }}</p>
+                                <p>Véhicule : {{ panne.vehicule }}</p>
+                                <p>Conducteur : {{ panne.conducteur }}</p>
+                                <p>Type de panne : {{ panne.type_panne }}</p>
+                                <p>Date de signalement : {{ panne.date_signalement }}</p>
+                                <p>Statut : {{ panne.statut }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4 text-center">
+        <a href="{% url 'creer_panne' %}" class="btn btn-success"><i class="fas fa-plus"></i> Nouvelle Panne</a>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ajouter le message ici
+        var alertBox = document.createElement('div');
+        alertBox.classList.add('alert', 'alert-success', 'text-center');
+        alertBox.textContent = 'La panne a été mise à jour avec succès.';
+        document.body.insertBefore(alertBox, document.body.firstChild);
+
+        // Supprimer le message après 5 secondes
+        setTimeout(function() {
+            alertBox.remove();
+        }, 5000);
+    });
+</script>
+
+<style>
+    .midde_cont {
+        padding: 20px;
+    }
+
+    .page_title h2 {
+        color: #333;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .btn {
+        margin-right: 5px;
+    }
+
+    .btn i {
+        margin-right: 5px;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'Employe/home_emp.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historique des Réservations</title>
+    <!-- Ajoutez les liens vers les fichiers CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Vos styles CSS personnalisés ici */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Historique des Réservations</h1>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date Debut</th>
+                        <th>Date Fin</th>
+                        <th>Destination</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                        <tr>
+                            <td>{{ reservation.date_debut }}</td>
+                            <td>{{ reservation.date_fin }}</td>
+                            <td>{{ reservation.destination }}</td>
+                            <td>{{ reservation.statut }}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal{{ reservation.id }}"><i class="fas fa-times"></i> Annuler</button>
+                               
+                                <!-- Modal -->
+                                <div class="modal fade" id="confirmModal{{ reservation.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel{{ reservation.id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmModalLabel{{ reservation.id }}">Confirmation de suppression</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Voulez-vous vraiment annuler cette réservation ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                                <form action="{% url 'annuler_reservation' reservation.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">Confirmer</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Ajoutez les fonctionnalités de pagination ici -->
+        <ul class="pagination justify-content-center">
+            <!-- Ajoutez votre pagination ici -->
+        </ul>
+    </div>
+    <!-- Ajoutez les liens vers les fichiers JavaScript de Bootstrap, si nécessaire -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}

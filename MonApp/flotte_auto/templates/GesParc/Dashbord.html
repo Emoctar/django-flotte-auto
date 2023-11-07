@@ -1,7 +1,7 @@
 {%extends 'GesParc/home_gesparc.html'%}
 {%load static%}
 {%block content%}
-<div class="midde_cont">
+{% comment %} <div class="midde_cont">
 
     <div class="container-fluid">
        <div class="row column_title">
@@ -11,5 +11,20 @@
              </div>
           </div>
        </div> 
-    <h1>Bienvenue {{user.get_full_name}} </h1>
+    <h1>Bienvenue {{user.get_full_name}} </h1> {% endcomment %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tableau de bord de la flotte</title>
+</head>
+<body>
+    <h1>Tableau de bord de la flotte</h1>
+    <p>Total de véhicules : {{ data.total_vehicules }}</p>
+    <p>Véhicules en service : {{ data.vehicules_en_service }}</p>
+    <p>Véhicules en panne : {{ data.vehicules_en_panne }}</p>
+    <p>Véhicules disponibles : {{ data.vehicules_disponibles }}</p>
+</body>
+</html>
+
 {%endblock%}

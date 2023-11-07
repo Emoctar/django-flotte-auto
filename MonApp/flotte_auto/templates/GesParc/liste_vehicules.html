@@ -54,15 +54,21 @@
                                     <td>{{ vehicule.kilometrage }}</td>
                                     <td>
                                         {% if vehicule.statut == 'Disponible' %}
-                                            <span class="text-success">Disponible</span>
-                                        {% elif vehicule.statut == 'En entretien' %}
-                                            <span class="text-warning">En entretien</span>
-                                        {% elif vehicule.statut == 'Réservé' %}
-                                            <span class="text-danger">Réservé</span>
-                                        {% else %}
-                                            <span class="text-danger">Indisponible</span>
-                                        {% endif %}
+                                        <span class="text-success">Disponible</span>
+                                    {% elif vehicule.statut == 'En Entretien' %}
+                                        <span class="text-warning">En entretien</span>
+                                    {% elif vehicule.statut == 'Réservé' and vehicule.assurance.statut == 'Expiree' %}
+                                        <span class="text-danger">Réservé/AssuranceExpire</span>
+                                    {% elif vehicule.statut == 'Réservé' %}
+                                        <span class="text-danger">Réservé</span>
+                                    {% elif vehicule.en_panne %}
+                                        <span class="text-danger">En panne</span>
+                                    {% else %}
+                                        <span class="text-danger">Indisponible</span>
+                                    {% endif %}
+                                    
                                     </td>
+                                    
                                     
                                     <td>
                                         <a href="{% url 'modifier_vehicule' vehicule.id %}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>

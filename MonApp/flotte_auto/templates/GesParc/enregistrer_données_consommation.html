@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-
 <div class="midde_cont">
     <div class="container-fluid">
         <div class="row column_title">
@@ -15,34 +14,49 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="add-vehicle-form white_shd">
-                    <h1 style="text-align: center;"> Nouvelle Utilisation</h1>
-            <div class="container mt-5">
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <form method="POST" class="custom-form">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="vehicule" class="form-label">Véhicule</label>
-                                <select class="form-select custom-select" id="vehicule" name="vehicule">
-                                    {% for vehicule in vehicules %}
-                                        <option value="{{ vehicule.id }}">{{ vehicule.modele }} - {{ vehicule.marque }}</option>
-                                    {% endfor %}
-                                </select>
+                    <h1 style="text-align: center;">Nouvelle Utilisation</h1>
+                    <div class="container mt-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <form method="POST" class="custom-form">
+                                    {% csrf_token %}
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="reservation" class="form-label">Réservation associée</label>
+                                            <input type="hidden" name="reservation" value="{{ reservation.id }}">
+                                            <input type="text" class="form-control" value="{{ reservation.id }}" disabled>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="vehicule" class="form-label">Véhicule associé à la consommation</label>
+                                            {{form.vehicule}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="date" class="form-label">Date</label>
+                                            <input type="date" class="form-control" name="date" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="quantite_carburant" class="form-label">Quantité de carburant (en litres)</label>
+                                            <input type="number" class="form-control" name="quantite_carburant" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="distance_parcourue" class="form-label">Distance parcourue (en kilomètres)</label>
+                                            <input type="number" class="form-control" name="distance_parcourue" required>
+                                        </div>
+                                    </div>
+                                   
+                                    <!-- Ajoutez d'autres champs ici si nécessaire -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-primary custom-btn">Enregistrer</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label for="date" class="form-label">Date</label>
-                                <input type="date" class="form-control custom-input" id="date" name="date" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="quantite_carburant" class="form-label">Quantité de carburant (en litres)</label>
-                                <input type="number" class="form-control custom-input" id="quantite_carburant" name="quantite_carburant" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="distance_parcourue" class="form-label">Distance parcourue (en kilomètres)</label>
-                                <input type="number" class="form-control custom-input" id="distance_parcourue" name="distance_parcourue" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary custom-btn">Enregistrer</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,24 +64,22 @@
     </div>
 </div>
 
-
 <style>
-    .custom-form {
-        background-color: #f9f9f9;
+    .midde_cont {
+        padding: 20px;
+    }
+
+    .white_shd {
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         padding: 20px;
         border-radius: 5px;
     }
 
-    .custom-input {
-        border: 1px solid #ced4da;
+    .custom-form {
+        background-color: #f9f9f9;
+        padding: 20px;
         border-radius: 5px;
-        padding: 8px;
-    }
-
-    .custom-select {
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-        padding: 8px;
     }
 
     .custom-btn {

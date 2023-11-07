@@ -37,7 +37,7 @@
                                     <div class="heading_section">
                                         <h4>{{ voiture.marque }} {{ voiture.modele }}</h4>
                                     </div>
-                                    <input type="checkbox" name="voitures" value="{{ voiture.id }}" />
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailsModal{{ voiture.id }}">Détails</button>
                                 </div>
                                 {% endfor %}
                             </div>
@@ -50,6 +50,33 @@
     </div>
 </div>
 
+<!-- Fenêtre modale pour les détails du véhicule -->
+{% for voiture in vehicules %}
+<div class="modal fade" id="detailsModal{{ voiture.id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel{{ voiture.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel{{ voiture.id }}">Détails du véhicule</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Afficher toutes les informations du véhicule -->
+                <p>Marque : {{ voiture.marque }}</p>
+                <p>Modèle : {{ voiture.modele }}</p>
+                <p>Année : {{ voiture.annee_fabrication }}</p>
+                <p>Plaque: {{ voiture.numéro_immatriculation }}</p>
+                <p>Kilometrage: {{ voiture.kilometrage }}</p>
+                <!-- Ajoutez d'autres détails selon vos besoins -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 <style>
     /* Style pour que les images aient les mêmes proportions */
     .img-proportion {

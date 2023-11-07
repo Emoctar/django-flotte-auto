@@ -46,12 +46,30 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="destination">Destination :</label>
-                                    <input type="text" class="form-control" id="destination" name="destination" required>
+                                    <select class="form-control" id="destination" name="destination" required>
+                                        <option value="" selected disabled>Choisir une région</option>
+                                        <option value="Dakar">Dakar</option>
+                                        <option value="Diourbel">Diourbel</option>
+                                        <option value="Fatick">Fatick</option>
+                                        <option value="Kaffrine">Kaffrine</option>
+                                        <option value="Kaolack">Kaolack</option>
+                                        <option value="Kédougou">Kédougou</option>
+                                        <option value="Kolda">Kolda</option>
+                                        <option value="Louga">Louga</option>
+                                        <option value="Matam">Matam</option>
+                                        <option value="Saint-Louis">Saint-Louis</option>
+                                        <option value="Sédhiou">Sédhiou</option>
+                                        <option value="Tambacounda">Tambacounda</option>
+                                        <option value="Thiès">Thiès</option>
+                                        <option value="Ziguinchor">Ziguinchor</option>
+                                    </select>
                                 </div>
+                                
                                 <div class="form-group">
                                     <label for="motif">Motif :</label>
                                     <textarea class="form-control" id="motif" name="motif" required></textarea>
                                 </div>
+                                
                                 <div class="form-group">
                                     <label for="vehicules">Véhicules :</label>
                                     {{ form.vehicules }}
@@ -159,7 +177,15 @@
             message.style.display = 'none';
         }, 5000);
     });
+
+
+    
 </script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+
 </html>
 
                     

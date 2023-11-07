@@ -1,0 +1,65 @@
+{% extends 'GesIntervention/GesInterv_home.html' %}
+
+{% block content %}
+<div class="midde_cont">
+
+    <div class="container-fluid">
+       <div class="row column_title">
+          <div class="col-md-12">
+             <div class="page_title">
+                <h2>Gestion des Pannes </h2>
+             </div>
+          </div>
+       </div> 
+    </div> 
+</div> 
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Nouvelle panne</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="vehicule" class="form-label">Véhicule</label>
+                                {{ form.vehicule }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="conducteur" class="form-label">Conducteur</label>
+                                {{ form.conducteur }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="type_panne" class="form-label">Type de panne</label>
+                                <select class="form-select" name="type_panne" required>
+                                    <option value="Autre">Autre</option>
+                                    <option value="Mécanique">Mécanique</option>
+                                    <option value="Electrique">Electrique</option>
+                                    <option value="Pneumatique">Pneumatique</option>
+                                    <option value="Carrosserie">Carrosserie</option>
+                                    <option value="Système de freinage">Système de freinage</option>
+                                    <option value="Système de transmission">Système de transmission</option>
+                                    <option value="Climatisation">Climatisation</option>
+                                    <option value="Système de refroidissement">Système de refroidissement</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="commentaire" class="form-label">Commentaire</label>
+                            <textarea class="form-control" name="commentaire" rows="3"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Créer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

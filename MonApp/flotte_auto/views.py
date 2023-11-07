@@ -7,7 +7,7 @@ from .forms import *
 from django.urls import reverse
 from .utils import*
 
-from django.conf import settings
+
 
 #####################################################################
 # views.py
@@ -26,17 +26,7 @@ def task_results(request):
     return render(request, 'task_results.html', {'task_result': task_result})
 
 ############################################
-#Compteur nbr_notif GesParc
-
-def compteur(request):
-    # Récupérez le nombre de réservations
-    nombre_reservations = ReservationVoiture.objects.count()
-
-    # Passez le nombre de réservations au modèle HTML
-    return render(request, 'GesParc/home_GesParc.html', {'nombre_reservations': nombre_reservations})
-
-
-
+#Compteur nbr_notif G
 
 ######################################################################
 
@@ -101,11 +91,34 @@ def liste_vehicules_disponible(request):
     return render(request, 'Employe/liste_voitures_disponible.html', {'vehicules': vehicules})
 
 
-def liste_vehicules(request):
-    """Vue pour afficher la liste des véhicules de la flotte."""
-    vehicules = Vehicule.objects.all()
-    return render(request, 'GesParc/liste_vehicules.html', {'vehicules': vehicules})
+from django.utils import timezone
 
+@login_required
+def liste_vehicules(request):
+    vehicules = Vehicule.objects.all()
+
+    for vehicule in vehicules:
+        if vehicule.assurance.statut == 'Expiree' or vehicule.assurance.date_fin < timezone.now().date():
+            if vehicule.reservationvoiture_set.filter(statut='Validée').exists():
+                vehicule.statut = 'Indisponible'
+            else:
+                vehicule.statut = 'Indisponible'
+        elif vehicule.reservationvoiture_set.filter(statut='Validée').exists():
+            vehicule.statut = 'Réservé'
+        else:
+            # Vérifiez si le véhicule est en maintenance
+            if vehicule.en_maintenance():
+                vehicule.statut = 'En Entretien'
+            # Vérifiez si le véhicule est en panne
+            elif vehicule.en_panne():
+                vehicule.statut = 'En Panne'
+            else:
+                vehicule.statut = 'Disponible'
+
+        # Enregistrez les modifications dans la base de données
+        vehicule.save()
+
+    return render(request, 'GesParc/liste_vehicules.html', {'vehicules': vehicules})
 
 
 def details_vehicule(request, vehicule_id):
@@ -170,7 +183,7 @@ def liste_conducteurs(request):
 #RESERVATION
 
 
-
+@login_required
 def gerer_reservations_attente(request):
     # Récupérez toutes les réservations en attente depuis la base de données
     reservations_attente = ReservationVoiture.objects.filter(statut='En attente').order_by('date_demande')
@@ -178,7 +191,7 @@ def gerer_reservations_attente(request):
     # Affichez ces réservations en attente dans un modèle approprié
     return render(request, 'GesParc/gerer_reservations_attente.html', {'reservations_attente': reservations_attente})
 
-
+@login_required
 def gerer_reservations_accepter(request):
     # Récupérez toutes les réservations validées depuis la base de données
     reservations_valide = ReservationVoiture.objects.filter(statut='Validée')
@@ -186,6 +199,7 @@ def gerer_reservations_accepter(request):
     # Affichez ces réservations validées dans un modèle approprié
     return render(request, 'GesParc/reservation_valide.html', {'reservations_valide': reservations_valide})
 
+@login_required
 def gerer_reservations_refuse(request):
     # Récupérez toutes les réservations refusées depuis la base de données
     reservations_refuse = ReservationVoiture.objects.filter(statut='Refusée')
@@ -198,6 +212,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import ReservationVoiture
 from .utils import envoyer_email_notification  # Assurez-vous d'importer cette fonction depuis vos utilitaires
 
+@login_required
 def valider_reservation(request, reservation_id):
     # Récupérez la réservation en fonction de l'ID
     reservation = get_object_or_404(ReservationVoiture, id=reservation_id)
@@ -241,11 +256,13 @@ def valider_reservation(request, reservation_id):
 
     return render(request, 'GesParc/confirmation_validation.html', {'reservation': reservation})  # Remplacez 'template.html' par le nom de votre modèle HTML
 
-
+@login_required
 def confirmation_validation(request):
     return render(request, 'GesParc/confirmation_validation.html')
 
+
 from django.contrib import messages
+@login_required
 def refuser_reservation(request, reservation_id):
     # Récupérez la réservation en fonction de l'ID
     reservation = get_object_or_404(ReservationVoiture, id=reservation_id)
@@ -293,6 +310,8 @@ from django.contrib import messages
 
 @login_required
 def creer_reservation(request):
+    vehicules = Vehicule.objects.filter(statut='Disponible')
+    context = {'vehicules': vehicules}
     if request.method == 'POST':
         form = ReservationVoitureForm(request.POST)
         if form.is_valid():
@@ -313,7 +332,15 @@ def creer_reservation(request):
     else:
         form = ReservationVoitureForm()
 
-    return render(request, 'Employe/creer_reservation.html', {'form': form})
+    return render(request, 'Employe/creer_reservation.html', {'form': form,'context':context})
+
+
+@login_required
+def supprimer_reservation(request, reservation_id):
+    reservation = ReservationVoiture.objects.get(pk=reservation_id)
+    reservation.delete()
+    return redirect('gerer_reservations_attente')  # Redirige vers la page d'historique des réservations refusées
+
 
     
 @login_required
@@ -332,23 +359,29 @@ def modifier_reservation(request, reservation_id):
     return render(request, 'Employe/modifier_reservation.html', {'form': form, 'reservation': reservation})
 
 @login_required
-def supprimer_reservation(request, reservation_id):
-    #Vue pour supprimer une réservation de voiture."""
+def annuler_reservation(request, reservation_id):
+    # Vue pour supprimer une réservation de voiture.
     reservation = get_object_or_404(ReservationVoiture, id=reservation_id)
     
     if request.method == 'POST':
         reservation.delete()
-        return redirect('liste_reservations')
+        return redirect('historique_reservations')  # Assurez-vous que 'historique_reservations' est le bon nom de votre URL.
 
-    return render(request, 'supprimer_reservation.html', {'reservation': reservation})
+    return render(request, 'Employe/historique_reservations.html', {'reservation': reservation})
+
+
 
 @login_required
-def liste_reservations(request):
-    #Vue pour afficher la liste des réservations de voiture."""
-    reservations = ReservationVoiture.objects.all()
-    return render(request, 'liste_reservations.html', {'reservations': reservations})
 
+def liste_toutes_reservations(request):
+    toutes_reservations = ReservationVoiture.objects.all()
 
+    context = {
+        'toutes_reservations': toutes_reservations
+    }
+
+    return render(request, 'GesParc/all_reservation.html', context)
+@login_required
 def details_reservation(request, reservation_id):
     reservation = get_object_or_404(ReservationVoiture, id=reservation_id)
     
@@ -367,7 +400,15 @@ def details_reservation(request, reservation_id):
 
     return render(request, 'GesParc/details_reservation.html', context)
 
+def historique_reservations(request):
+    user = request.user
+    reservations = ReservationVoiture.objects.filter(employe=user)
 
+    context = {
+        'reservations': reservations
+    }
+
+    return render(request, 'Employe/historique_reservations.html', context)
 
 
 
@@ -398,11 +439,11 @@ def ajouter_maintenance(request):
                 maintenance.save()
                 messages.success(request, 'Maintenance ajoutée avec succès.')
                 
-                # Changez automatiquement le statut du véhicule en 'En Entretien'
+                # Changez automatiquement le statut du véhicule en 'En Entretien' si le véhicule est disponible
                 vehicule.statut = 'En Entretien'
                 vehicule.save()
                 
-                return redirect('liste_vehicules')  # Rediriger vers la liste des véhicules
+                return redirect('ajouter_maintenance')  
             else:
                 messages.error(request, 'Le véhicule sélectionné n\'est pas disponible.')
     else:
@@ -436,7 +477,55 @@ def supprimer_maintenance(request, maintenance_id):
 
     return render(request, 'GesIntervention/supprimer_maintenance.html', {'maintenance': maintenance})
 
-##########################################################################
+
+from django.http import HttpResponseRedirect
+
+@login_required
+
+def terminer_maintenance(request, maintenance_id):
+    maintenance = get_object_or_404(Maintenance, id=maintenance_id)
+    vehicule = maintenance.vehicule
+    vehicule.statut = "Disponible"
+    vehicule.save()
+
+    # Marquer la maintenance comme terminée en mettant à jour le champ en_cours sur False
+    maintenance.en_cours = False
+    maintenance.save()
+
+    # Autres actions que vous souhaitez effectuer après avoir terminé la maintenance
+    return HttpResponseRedirect(reverse('gestionnaire_intervention_profile'))
+
+@login_required
+def terminer_reservation(request, reservation_id):
+    reservation = get_object_or_404(ReservationVoiture, pk=reservation_id)
+
+    if request.method == 'POST':
+        # Changer le statut de la réservation en terminé
+        reservation.statut = 'Terminé'
+        reservation.save()
+
+        # Mettre à jour le statut des véhicules en disponible
+        for vehicule in reservation.vehicules.all():
+            vehicule.statut = 'Disponible'
+            vehicule.save()
+
+        # Envoyer un e-mail de notification
+        sujet = 'Maintenance nécessaire pour la voiture'
+        message = f"La réservation pour la voiture {', '.join([str(v) for v in reservation.vehicules.all()])} a été terminée. Veuillez planifier une maintenance pour cette/ces voiture(s)."
+        destinataires = ['ehm.diallo3@gmail.com']  # Remplacez par l'adresse e-mail du gestionnaire
+        try:
+            envoyer_email_notification(sujet, message, destinataires)
+            messages.success(request, "L'e-mail a été envoyé avec succès.")
+        except Exception as e:
+            messages.error(request, f"Erreur lors de l'envoi de l'e-mail : {e}")
+
+        
+        return redirect('gerer_reservations_accepter')  
+
+    # Gérer les autres cas si nécessaire
+    return HttpResponse("Une erreur s'est produite lors de la tentative de terminer la réservation.")
+
+######################################################################
 
 from django.utils import timezone
 @login_required
@@ -452,47 +541,47 @@ def liste_maintenance(request):
 
 #ITINERAIRE
 
-def creer_itineraire(request):
-    if request.method == 'POST':
-        form = ItineraireForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('liste_itineraires')
-    else:
-        form = ItineraireForm()
+# def creer_itineraire(request):
+#     if request.method == 'POST':
+#         form = ItineraireForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('liste_itineraires')
+#     else:
+#         form = ItineraireForm()
     
-    vehicules = Vehicule.objects.all()
-    conducteurs = Conducteur.objects.all()
-    return render(request, 'creer_itineraire.html', {'form': form, 'vehicules': vehicules, 'conducteurs': conducteurs})
+#     vehicules = Vehicule.objects.all()
+#     conducteurs = Conducteur.objects.all()
+#     return render(request, 'creer_itineraire.html', {'form': form, 'vehicules': vehicules, 'conducteurs': conducteurs})
 
-def modifier_itineraire(request, itineraire_id):
-    itineraire = get_object_or_404(Itineraire, id=itineraire_id)
+# def modifier_itineraire(request, itineraire_id):
+#     itineraire = get_object_or_404(Itineraire, id=itineraire_id)
 
-    if request.method == 'POST':
-        form = ItineraireForm(request.POST, instance=itineraire)
-        if form.is_valid():
-            form.save()
-            return redirect('liste_itineraires')
+#     if request.method == 'POST':
+#         form = ItineraireForm(request.POST, instance=itineraire)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('liste_itineraires')
 
-    form = ItineraireForm(instance=itineraire)
-    vehicules = Vehicule.objects.all()
-    conducteurs = Conducteur.objects.all()
-    return render(request, 'modifier_itineraire.html', {'form': form, 'itineraire': itineraire, 'vehicules': vehicules, 'conducteurs': conducteurs})
+#     form = ItineraireForm(instance=itineraire)
+#     vehicules = Vehicule.objects.all()
+#     conducteurs = Conducteur.objects.all()
+#     return render(request, 'modifier_itineraire.html', {'form': form, 'itineraire': itineraire, 'vehicules': vehicules, 'conducteurs': conducteurs})
 
-def supprimer_itineraire(request, itineraire_id):
-    itineraire = get_object_or_404(Itineraire, id=itineraire_id)
+# def supprimer_itineraire(request, itineraire_id):
+#     itineraire = get_object_or_404(Itineraire, id=itineraire_id)
     
-    if request.method == 'POST':
-        itineraire.delete()
-        return redirect('liste_itineraires')
+#     if request.method == 'POST':
+#         itineraire.delete()
+#         return redirect('liste_itineraires')
 
-    return render(request, 'supprimer_itineraire.html', {'itineraire': itineraire})
+#     return render(request, 'supprimer_itineraire.html', {'itineraire': itineraire})
 
-def liste_itineraires(request):
-    itineraires = Itineraire.objects.all()
-    return render(request, 'liste_itineraires.html', {'itineraires': itineraires})
+# def liste_itineraires(request):
+#     itineraires = Itineraire.objects.all()
+#     return render(request, 'liste_itineraires.html', {'itineraires': itineraires})
 
-############################################################
+# ############################################################
 
 @login_required
 def noter_conducteur(request, conducteur_id):
@@ -515,19 +604,44 @@ def noter_conducteur(request, conducteur_id):
 ###################################################################
 #CONSOMMATION
 
-def enregistrer_donnees_consommation(request):
-    if request.method == 'POST':
-        form = ConsommationCarburantForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('liste_donnees_consommation_carburant')
-    else:
-        form = ConsommationCarburantForm()
-    
-    vehicules = Vehicule.objects.all()
-    
-    return render(request, 'GesParc/enregistrer_données_consommation.html', {'form': form, 'vehicules': vehicules})
 
+
+
+@login_required
+
+def enregistrer_donnees_consommation(request, reservation_id):
+    try:
+        reservation = ReservationVoiture.objects.get(id=reservation_id)
+        vehicules = Vehicule.objects.all()
+        if request.method == 'POST':
+            form = ConsommationCarburantForm(request.POST)
+            if form.is_valid():
+                consommation = form.save(commit=False)
+                consommation.reservation = reservation
+                consommation.save()
+
+                vehicule = form.cleaned_data['vehicule']
+                taux_consommation = vehicule.consommation_moyenne()
+                print(f"Le taux de consommation pour le véhicule {vehicule.id} est {taux_consommation}")
+
+                return redirect('liste_donnees_consommation_carburant')
+            else:
+                print("Début de la soumission du formulaire : le formulaire n'est pas valide")
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        print(f"Erreur de validation pour le champ {field}: {error}")
+        else:
+            form = ConsommationCarburantForm(initial={'reservation': reservation})
+
+        return render(request, 'GesParc/enregistrer_données_consommation.html', {'form': form, 'vehicules': vehicules, 'reservation': reservation})
+    except ReservationVoiture.DoesNotExist as e:
+        print(f"Erreur : {e}")
+    except Vehicule.DoesNotExist as e:
+        print(f"Erreur : {e}")
+    except Exception as e:
+        print(f"Erreur inattendue : {e}")
+
+@login_required
 # # Vue pour modifier les données de consommation de carburant existantes
 def modifier_données_consommation(request, données_consommation_id):
     donnees_consommation = get_object_or_404(ConsommationCarburantForm, id=données_consommation_id)
@@ -543,6 +657,7 @@ def modifier_données_consommation(request, données_consommation_id):
     gestionnaires_consommation = GestionnaireConsommation.objects.all()
     return render(request, 'modifier_données_consommation.html', {'form': form, 'donnees_consommation': donnees_consommation, 'vehicules': vehicules, 'gestionnaires_consommation': gestionnaires_consommation})
 
+@login_required
 # # Vue pour supprimer un enregistrement de données de consommation de carburant
 def supprimer_donnees_consommation(request, données_consommation_id):
     données_consommation = get_object_or_404(ConsommationCarburantForm, id=données_consommation_id)
@@ -557,10 +672,10 @@ def supprimer_donnees_consommation(request, données_consommation_id):
 @login_required
 def liste_donnees_consommation_carburant(request):
     donnees_consommation = ConsommationCarburant.objects.all()
-    return render(request, 'GesParc/liste_données_consommation_carburant.html', {'donnees_consommation': donnees_consommation})
+    vehicules = Vehicule.objects.all()
+    return render(request, 'GesParc/liste_données_consommation_carburant.html', {'donnees_consommation': donnees_consommation, 'vehicules': vehicules})
 
-
-
+@login_required
 def suivi_consommation(request):
     vehicules = Vehicule.objects.all()
     context = {
@@ -646,6 +761,7 @@ def liste_couts(request):
 #############################################################
 #Notifications
 
+
 # Vue pour créer une notification
 def creer_notification(request):
     if request.method == 'POST':
@@ -692,7 +808,7 @@ def liste_notifications(request):
 
 
 #Vue pour Assurrance
-
+@login_required
 def ajouter_assurance(request, vehicule_id):
     vehicule = Vehicule.objects.get(pk=vehicule_id)
 
@@ -709,7 +825,7 @@ def ajouter_assurance(request, vehicule_id):
 
     return render(request, 'Assurance/assurances.html', {'vehicule': vehicule, 'form': form})
 
-
+@login_required
 def mettre_a_jour_statut_vehicules(request):
     # Récupérer toutes les assurances expirées
     assurances_expirees = Assurance.objects.filter(date_fin__lt=timezone.now().date())
@@ -723,8 +839,22 @@ def mettre_a_jour_statut_vehicules(request):
     return redirect('liste_vehicules')
 
 
+from django.utils import timezone
+
+@login_required
 def liste_assurances(request):
     assurances = Assurance.objects.all()
+    
+    # Boucle à travers chaque assurance et détermine le statut en fonction de la date de fin
+    for assurance in assurances:
+        if assurance.date_fin < timezone.now().date():
+            assurance.statut = 'Expiree'
+        else:
+            assurance.statut = 'Valide'
+        
+        # Enregistrez les modifications dans la base de données
+        assurance.save()
+
     context = {'assurances': assurances}
     return render(request, 'Assurance/liste_assurances.html', context)
 
@@ -746,4 +876,63 @@ def ma_vue(request):
     }
     
     return render(request, 'GesParc/home_GesParc.html', context)
+
+
+
+#PANNE
+
+
+@login_required
+def creer_panne(request):
+    if request.method == 'POST':
+        form = PanneForm(request.POST)
+        if form.is_valid():
+            panne = form.save()
+            if panne.statut == 'En cours':
+                vehicule = panne.vehicule
+                vehicule.statut = 'En Panne'
+                vehicule.save()
+            return redirect('liste_pannes')  # Remplacez 'liste_pannes' par le nom de votre vue de liste des pannes
+    else:
+        form = PanneForm()
+    return render(request, 'GesIntervention/nouvelle_panne.html', {'form': form})
+
+
+# Vue pour mettre à jour une panne
+
+@login_required
+def modifier_panne(request, panne_id):
+    panne = get_object_or_404(Panne, pk=panne_id)
+    if request.method == 'POST':
+        form = PanneForm(request.POST, instance=panne)
+        if form.is_valid():
+            new_statut = form.cleaned_data['statut']  # Récupère le nouveau statut de la panne depuis le formulaire
+            if new_statut == 'Clôturé':
+                # Mettre à jour le statut du véhicule
+                panne.vehicule.statut = 'Disponible'
+                panne.vehicule.save()
+                
+                # Définir la date de fin d'intervention à la date actuelle
+                panne.date_fin_intervention = timezone.now().date()  # ou datetime.now().date() si nécessaire
+
+            form.save()
+            messages.success(request, 'La panne a été mise à jour avec succès.')
+            return redirect('liste_pannes')  # Remplacez 'liste_pannes' par le nom de votre vue pour lister les pannes
+    else:
+        form = PanneForm(instance=panne)
+    return render(request, 'GesIntervention/modifier_panne.html', {'form': form})
+
+# Vue pour supprimer une panne
+def supprimer_panne(request, panne_id):
+    panne = get_object_or_404(Panne, pk=panne_id)
+    panne.delete()
+    messages.success(request, 'La panne a été supprimée avec succès.')
+    return redirect('liste_pannes')  # Remplacez 'liste_pannes' par le nom de votre vue pour lister les pannes
+
+@login_required
+def liste_pannes(request):
+    pannes = Panne.objects.all()
+    return render(request, 'GesIntervention/liste_pannes.html', {'pannes': pannes})
+
+
 

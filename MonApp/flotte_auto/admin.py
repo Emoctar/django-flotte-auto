@@ -3,6 +3,7 @@ from .models import *
 
 # Enregistrez les modèles dans l'administration Django
 admin.site.register(Vehicule)
+admin.site.register(Assurance)
 admin.site.register(GestionnaireParc)
 admin.site.register(GestionnaireConsommation)
 admin.site.register(GestionnaireIntervention)

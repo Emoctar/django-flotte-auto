@@ -88,12 +88,15 @@
                                 <td>{{ assurance.date_debut }}</td>
                                 <td>{{ assurance.date_fin }}</td>
                                 <td>{{ assurance.prime_annuelle }}</td> 
-                                <td>  {% if assurance.date_fin < date.today %}
+                                <td>  
+                                    {% if assurance.statut == 'Expiree' %}
                                        <span style="color: red;">Expiree</span>
-                                       {% else %}
-                                          <span style="color: green;">Valide</span>
-                                       {% endif %}
-                                 </td> 
+                                    {% else %}
+                                       <span style="color: green;">Valide</span>
+                                    {% endif %}
+                                  </td>
+                             
+                           </tr>
                                     
                                 
 
