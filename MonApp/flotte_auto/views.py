@@ -50,14 +50,19 @@ def index(request):
 def creer_vehicule(request):
     """Vue pour créer un nouveau véhicule dans la flotte."""
     if request.method == 'POST':
-        form = VehiculeForm(request.POST)
+        form = VehiculeForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('liste_vehicules')
+        else:
+            # Ajoutez ceci pour afficher les erreurs dans la console
+            print(form.errors)
     else:
         form = VehiculeForm()
     
     return render(request, 'GesParc/creer_vehicules.html', {'form': form})
+
+
 
 @login_required
 def modifier_vehicule(request, vehicule_id):
@@ -137,7 +142,7 @@ def details_vehicule(request, vehicule_id):
 def creer_conducteur(request):
     """Vue pour créer un nouveau conducteur."""
     if request.method == 'POST':
-        form = ConducteurForm(request.POST)
+        form = ConducteurForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('liste_conducteurs')
@@ -156,8 +161,11 @@ def modifier_conducteur(request, conducteur_id):
         if form.is_valid():
             form.save()
             return redirect('liste_conducteurs')
-
-    form = ConducteurForm(instance=conducteur)
+        else:
+            print(form.errors)
+    else:
+        form = ConducteurForm(instance=conducteur)
+        
     return render(request, 'Chauffeur/modifier_conducteur.html', {'form': form, 'conducteur': conducteur})
 
 @login_required

@@ -8,7 +8,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     
     ###########################################
-     path('task_results/', views.task_results, name='task_results'),
+    #  path('task_results/', views.task_results, name='task_results'),
     
     #######################3
     

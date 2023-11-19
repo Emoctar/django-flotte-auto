@@ -1,82 +1,127 @@
-{% extends 'GesParc/home_GesParc.html' %}
+{% extends 'GesParc/home_gesparc.html' %}
 {% load static %}
 
 {% block content %}
-<style>
-    .input-short {
-        width: 30%;
-    }
-
-    .form-container {
-        max-height: 450px;
-        overflow-y: auto;
-    }
-</style>
-
+{% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.errors }}
+    </div>
+{% endif %}
 <div class="midde_cont">
     <div class="container-fluid">
         <div class="row column_title">
             <div class="col-md-12">
                 <div class="page_title">
-                    <h2>Espace Conducteur</h2>
+                    <h2>Ajouter Conducteur</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="add-conducteur-form white_shd">
+                    <h1>Ajouter un nouveau conducteur</h1>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="id_nom">Nom :</label>
+                                <input type="text" name="nom" class="form-control" id="id_nom" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_prenom">Prénom :</label>
+                                <input type="text" name="prenom" class="form-control" id="id_prenom" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_date_naissance">Date de naissance :</label>
+                                <input type="date" name="date_naissance" class="form-control" id="id_date_naissance" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_adresse">Adresse :</label>
+                                <input type="text" name="adresse" class="form-control" id="id_adresse" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_telephone">Téléphone :</label>
+                                <input type="tel" name="telephone" class="form-control" id="id_telephone" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_horaires_travail">Horaires de travail :</label>
+                                <input type="text" name="horaires_travail" class="form-control" id="id_horaires_travail" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_numero_permis_conduire">Numéro de permis :</label>
+                                <input type="text" name="numero_permis_conduire" class="form-control" id="id_numero_permis_conduire" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_photo">Photo du conducteur :</label>
+                                <input type="file" name="photo" class="form-control-file" id="id_photo">
+                            </div>
+                            <!-- Ajoutez d'autres champs de formulaire de la même manière -->
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                    <div class="text-center">
+                        <a href="{% url 'liste_conducteurs' %}" class="btn btn-secondary">Retour à la liste des conducteurs</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form method="post" action="{% url 'creer_conducteur' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="white_shd full margin_bottom_30">
-                    <div class="full graph_head">
-                        <div class="heading1 margin_0">
-                            <h2>Ajouter un nouveau conducteur</h2>
-                        </div>
-                    </div>
-                    <div class="full gallery_section_inner padding_infor_info">
-                        <div class="container form-container">
-                            <div class="mb-3 form-group row">
-                                <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control input-short" id="nom" name="nom" required>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-group row">
-                                <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control input-short" id="prenom" name="prenom" required>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-group row">
-                                <label for="date_naissance" class="col-sm-2 col-form-label">Date de naissance :</label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control input-short" id="date_naissance" name="date_naissance" required>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-group row">
-                                <label for="adresse" class="col-sm-2 col-form-label">Adresse :</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control input-short" id="adresse" name="adresse" required>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-group row">
-                                <label for="telephone" class="col-sm-2 col-form-label">Téléphone :</label>
-                                <div class="col-sm-10">
-                                    <input type="tel" class="form-control input-short" id="telephone" name="telephone" required>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-group row">
-                                <label for="photo" class="col-sm-2 col-form-label">Photo :</label>
-                                <div class="col-sm-10">
-                                    <input type="file" class="form-control-file" id="photo" name="photo">
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Créer Conducteur</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
+
+<style>
+    /* Styles pour le formulaire */
+    .add-conducteur-form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .add-conducteur-form h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Styles pour les étiquettes de formulaire */
+    .add-conducteur-form label {
+        font-weight: bold;
+    }
+
+    /* Styles pour les champs de formulaire */
+    .add-conducteur-form .form-group input[type="text"],
+    .add-conducteur-form .form-group input[type="number"],
+    .add-conducteur-form .form-group select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /* Styles pour le champ de fichier (input type="file") */
+    .add-conducteur-form .form-group input[type="file"] {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 15px;
+    }
+
+    /* Styles pour le bouton "Enregistrer" */
+    .add-conducteur-form .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+    }
+
+    /* Styles pour le bouton "Retour à la liste des conducteurs" */
+    .add-conducteur-form .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+        margin-top: 10px;
+    }
+</style>
+
 {% endblock %}

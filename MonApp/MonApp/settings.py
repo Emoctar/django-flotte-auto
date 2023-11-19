@@ -84,31 +84,31 @@ WSGI_APPLICATION = "MonApp.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'flotte_auto',
+#         'USER': 'admin',
+#         'PASSWORD': 'Redefere72',
+#         'HOST': 'localhost',  # ou l'adresse de votre serveur PostgreSQL
+#         'PORT': '5432',  # Laissez vide pour utiliser le port par défaut (5432)
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'mssql',
         'NAME': 'flotte_auto',
         'USER': 'admin',
         'PASSWORD': 'Redefere72',
-        'HOST': 'localhost',  # ou l'adresse de votre serveur PostgreSQL
-        'PORT': '5432',  # Laissez vide pour utiliser le port par défaut (5432)
+        'HOST': 'MOCTAR\EMD_SERVER',  # Remplacez par le nom ou l'adresse IP de votre serveur SQL Server
+        'PORT': '',           # Laissez vide pour utiliser le port par défaut (généralement 1433)
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',  # Remplacez 'xx' par la version de votre pilote
+        },
     }
-}
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'sql_server.pyodbc',
-#         'NAME': 'flotte_auto',
-#         'USER': 'Admin',
-#         'PASSWORD': 'Redefere72',
-#         'HOST': 'MOCTAR\EMD_SERVER',  # Remplacez par le nom ou l'adresse IP de votre serveur SQL Server
-#         'PORT': '1433',           # Laissez vide pour utiliser le port par défaut (généralement 1433)
-#         'OPTIONS': {
-#             'driver': 'ODBC Driver 17 for SQL Server',  # Remplacez 'xx' par la version de votre pilote
-#         },
-#     }
     
-# }
+}
 
 
 
@@ -198,6 +198,8 @@ CELERY_BEAT_SCHEDULE = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+PASSWORD_RESET_CONFIRM_SUBJECT_TEMPLATE = 'registration/password_reset_subject.txt'
+PASSWORD_RESET_CONFIRM_MESSAGE_TEMPLATE = 'registration/password_reset_email.html'
 
 
 

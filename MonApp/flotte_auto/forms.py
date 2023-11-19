@@ -97,14 +97,15 @@ class ConducteurForm(forms.ModelForm):
     class Meta:
         model = Conducteur
         fields = '__all__'
+
     photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
-        
+
 
 class VehiculeForm(forms.ModelForm):
     class Meta:
         model = Vehicule
-        fields = '__all__'
-        photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+        fields =  '__all__'
+    photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
         
         
 

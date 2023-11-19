@@ -15,7 +15,7 @@
     <meta name="author" content="">
     <!-- site icon -->
     
-    <link rel="icon" href="{% static 'style/images/fevicon.png' %}" type="image/png" />
+    <link rel="icon" type="image/x-icon" href="{% static 'style/images/logo/logo_icon.png'%}">
     <!-- bootstrap css -->
     <link rel="stylesheet" href="{% static 'style/css/bootstrap.min.css' %}" />
     <!-- site css -->
@@ -116,8 +116,8 @@
                                         <li>
                                             <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{user.employé.photo.url}}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="{% url 'employe_profile' %}">My Profile</a>
-                                                <a class="dropdown-item" href="{% url 'logout' %}"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                                                <a class="dropdown-item" href="{% url 'employe_profile' %}">Mon Profil</a>
+                                                <a class="dropdown-item" href="{% url 'logout' %}"><span>Deconnexion</span> <i class="fa fa-sign-out"></i></a>
                                             </div>
                                         </li>
                                     </ul>
