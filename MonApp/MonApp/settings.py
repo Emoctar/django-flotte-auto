@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,8 +41,6 @@ INSTALLED_APPS = [
     'flotte_auto',
     'usersapp',
     'sql_server.pyodbc',
-     
-     
     
     
 ]
@@ -76,7 +75,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "MonApp.wsgi.application"
+# Utilisez Channels comme backend pour ASGI
+ASGI_APPLICATION = 'MonApp.routing.application'
 #Authentification
+
 
 
 
@@ -198,10 +200,6 @@ CELERY_BEAT_SCHEDULE = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-PASSWORD_RESET_CONFIRM_SUBJECT_TEMPLATE = 'registration/password_reset_subject.txt'
-PASSWORD_RESET_CONFIRM_MESSAGE_TEMPLATE = 'registration/password_reset_email.html'
-
-
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
@@ -217,6 +215,15 @@ EMAIL_PORT = 587  # Port SMTP de Gmail
 EMAIL_USE_TLS = True  # Utilisez TLS pour la sécurité
 EMAIL_HOST_USER = 'moctardiallo1916@gmail.com'  # Votre adresse e-mail Gmail
 EMAIL_HOST_PASSWORD = 'nqwswjgtsbxsbudb'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
+
+
+# Paramètres pour le compte d'administration (utilisé pour la création de comptes)
+ADMIN_EMAIL_HOST = 'smtp.gmail.com'
+ADMIN_EMAIL_PORT = 587
+ADMIN_EMAIL_USE_TLS = True
+ADMIN_EMAIL_HOST_USER = 'a.myfleet03@gmail.com'  # Remplacez par l'adresse e-mail d'administration
+ADMIN_EMAIL_HOST_PASSWORD = 'srggwnaegjbgvdme'  # Remplacez par le mot de passe d'administration
+
 
 #######################################
 #API NOTIFICATION TWILIO

@@ -15,7 +15,7 @@ urlpatterns =[
     path('register/', views.register, name = 'register'),
     
      path('gestionnaire_parc_profile/', views.gestionnaire_parc_profile, name='gestionnaire_parc_profile'),
-    path('gestionnaire_consommation_profile/', views.gestionnaire_consommation_profile, name='gestionnaire_consommation_profile'),
+    
     path('employe_profile/', views.employe_profile, name='employe_profile'),
     path('gestionnaire_intervention_profile/', views.gestionnaire_intervention_profile, name='gestionnaire_intervention_profile'),
 ]

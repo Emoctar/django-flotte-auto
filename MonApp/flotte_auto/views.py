@@ -9,21 +9,41 @@ from .utils import*
 
 
 
-#####################################################################
+# #page erreur
+
+
+# def custom_page_not_found(request, exception):
+#     return render(request, 'page_erreur/404.html', status=404)
+
+# # #####################################################################
 # views.py
 
 
-from .tasks import *
+from django.db.models import Count
+# Dans votre vue Django
+def votre_vue(request):
+    # Supposons que vous avez un modèle Car qui contient les informations nécessaires
+    cars = Vehicule.objects.all()
 
-def task_results(request):
-    # Appelez votre tâche Celery pour obtenir les résultats
-    result = mettre_a_jour_statut_vehicules_task.delay()
+    # Obtenez les noms des voitures et leurs années de fabrication
+    car_labels = [car.marque for car in cars]
+    car_years = [car.annee_fabrication for car in cars]
+    
+    panne_statistics = Panne.objects.values('type_panne').annotate(count=Count('type_panne'))
+    print(panne_statistics)
 
-    # Récupérez le résultat de la tâche
-    task_result = result.get()
+    # Ajoutez ces données au contexte
+    context = {
+        'car_labels': car_labels,
+        'car_years': car_years,
+        'panne_statistics': panne_statistics,
+    }
 
-    # Passez le résultat au modèle
-    return render(request, 'task_results.html', {'task_result': task_result})
+    return render(request, 'GesParc/chart.html', context)
+
+
+
+
 
 ############################################
 #Compteur nbr_notif G
@@ -220,49 +240,39 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import ReservationVoiture
 from .utils import envoyer_email_notification  # Assurez-vous d'importer cette fonction depuis vos utilitaires
 
+# Importez la fonction render_to_string pour rendre le modèle en chaîne HTML
+from django.template.loader import render_to_string
+
 @login_required
 def valider_reservation(request, reservation_id):
     # Récupérez la réservation en fonction de l'ID
     reservation = get_object_or_404(ReservationVoiture, id=reservation_id)
 
-    if request.method == 'POST' :
+    if request.method == 'POST':
         # Marquez la réservation comme validée
         reservation.statut = 'Validée'
-        
         reservation.save()
 
         # Récupérez les détails des véhicules associés à la réservation
         vehicules_reserves = reservation.vehicules.all()
-        
+
         for vehicule in vehicules_reserves:
             vehicule.statut = 'Réservé'
             vehicule.save()
 
         # Personnalisez le sujet et le message ici avec les détails de la réservation
         sujet = 'Réservation validée'
-        message = f'Votre réservation a été validée avec succès.\n\nDétails de la réservation :\n'
-        message += f'Date de début : {reservation.date_debut}\n'
-        message += f'Date de fin : {reservation.date_fin}\n'
-        message += f'Destination : {reservation.destination}\n'
-        message += f'Motif : {reservation.motif}\n'
-
-        # Ajoutez les détails des véhicules réservés au message
-        message += 'Véhicules réservés :\n'
-        for vehicule in vehicules_reserves:
-            message += f'Marque : {vehicule.marque}, Modèle : {vehicule.modele}, Plaque d\'immatriculation : {vehicule.numéro_immatriculation}\n'
+        message = render_to_string('Email_Modele/confirmation_reservation.html', {'reservation': reservation, 'vehicules_reserves': vehicules_reserves})
 
         destinataires = [reservation.employe.email]
-
 
         try:
             envoyer_email_notification(sujet, message, destinataires)
             messages.success(request, "L'e-mail a été envoyé avec succès.")
         except Exception as e:
-             messages.error(request, f"Erreur lors de l'envoi de l'e-mail : {e}")
+            messages.error(request, f"Erreur lors de l'envoi de l'e-mail : {e}")
 
-      
-
-    return render(request, 'GesParc/confirmation_validation.html', {'reservation': reservation})  # Remplacez 'template.html' par le nom de votre modèle HTML
+    return render(request, 'GesParc/confirmation_validation.html', {'reservation': reservation})
 
 @login_required
 def confirmation_validation(request):
@@ -519,7 +529,7 @@ def terminer_reservation(request, reservation_id):
 
         # Envoyer un e-mail de notification
         sujet = 'Maintenance nécessaire pour la voiture'
-        message = f"La réservation pour la voiture {', '.join([str(v) for v in reservation.vehicules.all()])} a été terminée. Veuillez planifier une maintenance pour cette/ces voiture(s)."
+        message = render_to_string('Email_Modele/reservation_terminate_email.html', {'reservation': reservation})
         destinataires = ['ehm.diallo3@gmail.com']  # Remplacez par l'adresse e-mail du gestionnaire
         try:
             envoyer_email_notification(sujet, message, destinataires)
@@ -817,21 +827,21 @@ def liste_notifications(request):
 
 #Vue pour Assurrance
 @login_required
-def ajouter_assurance(request, vehicule_id):
-    vehicule = Vehicule.objects.get(pk=vehicule_id)
+def ajouter_assurance(request):
+    
 
     if request.method == 'POST':
         form = AssuranceForm(request.POST)  # Créez une instance du formulaire avec les données POST
 
         if form.is_valid():
             assurance = form.save(commit=False)
-            assurance.vehicule = vehicule  # Liez l'assurance au véhicule
+            # Liez l'assurance au véhicule
             assurance.save()
             return redirect('liste_vehicules')
     else:
         form = AssuranceForm()
 
-    return render(request, 'Assurance/assurances.html', {'vehicule': vehicule, 'form': form})
+    return render(request, 'Assurance/assurances.html', { 'form': form})
 
 @login_required
 def mettre_a_jour_statut_vehicules(request):
@@ -842,6 +852,7 @@ def mettre_a_jour_statut_vehicules(request):
     for assurance in assurances_expirees:
         vehicule = assurance.vehicule
         vehicule.statut = 'Indisponible'
+        assurance.statut='Expiree'
         vehicule.save()
 
     return redirect('liste_vehicules')
@@ -865,6 +876,22 @@ def liste_assurances(request):
 
     context = {'assurances': assurances}
     return render(request, 'Assurance/liste_assurances.html', context)
+
+
+# Dans views.py
+def modifier_assurance(request, assurance_id):
+    assurance = get_object_or_404(Assurance, id=assurance_id)
+
+    if request.method == 'POST':
+        form = AssuranceForm(request.POST, instance=assurance)
+        if form.is_valid():
+            form.save()
+            # Rediriger l'utilisateur vers une page de confirmation ou ailleurs
+            return redirect('liste_assurances')
+    else:
+        form = AssuranceForm(instance=assurance)
+
+    return render(request, 'Assurance/modifier_assurance.html', {'form': form, 'assurance': assurance})
 
 
 from django.shortcuts import render
@@ -901,6 +928,9 @@ def creer_panne(request):
                 vehicule.statut = 'En Panne'
                 vehicule.save()
             return redirect('liste_pannes')  # Remplacez 'liste_pannes' par le nom de votre vue de liste des pannes
+        else:
+            
+            print(form.errors)
     else:
         form = PanneForm()
     return render(request, 'GesIntervention/nouvelle_panne.html', {'form': form})
@@ -943,4 +973,7 @@ def liste_pannes(request):
     return render(request, 'GesIntervention/liste_pannes.html', {'pannes': pannes})
 
 
+
+# views.py
+# views.py
 

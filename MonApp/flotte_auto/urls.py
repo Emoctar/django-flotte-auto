@@ -4,13 +4,23 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
+# Dans votre fichier urls.py
+
+
+
+
+
+
+# Remplacez 'myapp' par le nom de votre application
 
 urlpatterns = [
-    
-    ###########################################
-    #  path('task_results/', views.task_results, name='task_results'),
-    
-    #######################3
+  
+   
+  
+   path('gestionnaire_parc_profile/votre_vue/', views.votre_vue, name='votre_vue'),
+    # Ajoutez d'autres URL au besoin
+   
+ 
     
     path('', views.index, name='index'),
     
@@ -50,15 +60,7 @@ urlpatterns = [
      
       path('gestionnaire_parc_profile/gerer_reservations_refuse/', views.gerer_reservations_refuse, name='gerer_reservations_refuse'),
       
-    # Autres chemins URL pour d'autres vues
-
-    
-    # path('creer_itineraire/', views.creer_itineraire, name='creer_itineraire'),
-    # path('modifier_itineraire/<int:itineraire_id>/', views.modifier_itineraire, name='modifier_itineraire'),
-    # path('supprimer_itineraire/<int:itineraire_id>/', views.supprimer_itineraire, name='supprimer_itineraire'),
-    # path('liste_itineraires/', views.liste_itineraires, name='liste_itineraires'),
-
-  
+   
     # Vues liées aux données de consommation de carburant
       path('enregistrer_donnees_consommation/<int:reservation_id>/', views.enregistrer_donnees_consommation, name='enregistrer_donnees_consommation'),
     # path('modifier_donnees_consommation/<int:données_consommation_id>/', views.modifier_données_consommation, name='modifier_donnees_consommation'),
@@ -72,16 +74,12 @@ urlpatterns = [
     path('supprimer_cout/<int:cout_id>/', views.supprimer_cout, name='supprimer_cout'),
     path('liste_couts/', views.liste_couts, name='liste_couts'),
 
-    # Vues liées aux notifications
-    path('creer_notification/', views.creer_notification, name='creer_notification'),
-    path('modifier_notification/<int:notification_id>/', views.modifier_notification, name='modifier_notification'),
-    path('supprimer_notification/<int:notification_id>/', views.supprimer_notification, name='supprimer_notification'),
-    path('liste_notifications/', views.liste_notifications, name='liste_notifications'),
-    
+ 
       # Vues liées aux assurances
-    path('ajouter_assurance/<int:vehicule_id>/', views.ajouter_assurance, name='ajouter_assurance'),
-    path('mettre_a_jour_statut_vehicules/', views.mettre_a_jour_statut_vehicules, name='mettre_a_jour_statut_vehicules'),
-    path('liste_assurances/', views.liste_assurances, name= 'liste_assurances'),
+    path('gestionnaire_parc_profile/ajouter_assurance/', views.ajouter_assurance, name='ajouter_assurance'),
+    path('gestionnaire_parc_profile/mettre_a_jour_statut_vehicules/', views.mettre_a_jour_statut_vehicules, name='mettre_a_jour_statut_vehicules'),
+    path('gestionnaire_parc_profile/liste_assurances/', views.liste_assurances, name= 'liste_assurances'),
+    path('gestionnaire_parc_profile/modifier_assurance/<int:assurance_id>/', views.modifier_assurance, name='modifier_assurance'),
 
     #Vue pour la maintenance
      path('gestionnaire_intervention_profile/ajouter_maintenance/', views.ajouter_maintenance, name='ajouter_maintenance'),
@@ -102,3 +100,6 @@ urlpatterns = [
       
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+

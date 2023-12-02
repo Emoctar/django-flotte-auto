@@ -1,0 +1,31 @@
+<!-- modifier_assurance.html -->
+
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="modifierAssuranceModal{{ assurance.id }}">Modifier Assurance</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+          <!-- Formulaire pour la modification de l'assurance -->
+            <!-- Dans modifier_assurance_modal.html -->
+           <!-- modifier_assurance.html -->
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Champs modifiables -->
+                
+
+                
+
+                <!-- Bouton pour enregistrer les modifications -->
+                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            </form>
+
+
+      </div>
+  </div>
+</div>

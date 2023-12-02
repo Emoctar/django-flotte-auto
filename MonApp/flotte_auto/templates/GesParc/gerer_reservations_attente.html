@@ -4,18 +4,26 @@
 {% block content %}
   <div class="container mt-5">
     <h1>Gérer les réservations en attente</h1>
-    <div class="list-group mt-4">
-      {% for reservation in reservations_attente %}
-        <a href="{% url 'details_reservation' reservation.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="mb-1">Destination : {{ reservation.destination }}</h5>
-            <p class="mb-1">Date de demande : {{ reservation.date_demande|date:"D d M Y H:i" }}</p>
-            <p class="mb-1">Statut : En attente</p>
-          </div>
-          <a href="{% url 'details_reservation' reservation.id %}" class="btn btn-primary btn-sm">Voir les détails</a>
-        </a>
-      {% endfor %}
-    </div>
+
+    {% if reservations_attente %}
+      <div class="list-group mt-4">
+        {% for reservation in reservations_attente %}
+          <a href="{% url 'details_reservation' reservation.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="mb-1">Destination : {{ reservation.destination }}</h5>
+              <p class="mb-1">Date de demande : {{ reservation.date_demande|date:"D d M Y H:i" }}</p>
+              <p class="mb-1">Statut : En attente</p>
+            </div>
+            <a href="{% url 'details_reservation' reservation.id %}" class="btn btn-primary btn-sm">Voir les détails</a>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center mt-4">
+        <img src="{% static 'style/images/layout_img/indisponible.png' %}" alt="Aucune réservation en attente">
+        <p>Aucune réservation en attente pour le moment.</p>
+      </div>
+    {% endif %}
   </div>
 
   <style>

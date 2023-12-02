@@ -1,65 +1,137 @@
 {% extends 'GesIntervention/GesInterv_home.html' %}
 
 {% block content %}
-<div class="midde_cont">
 
+{% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.errors }}
+    </div>
+{% endif %}
+
+<div class="midde_cont">
     <div class="container-fluid">
-       <div class="row column_title">
-          <div class="col-md-12">
-             <div class="page_title">
-                <h2>Gestion des Pannes </h2>
-             </div>
-          </div>
-       </div> 
-    </div> 
-</div> 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Nouvelle panne</h2>
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="vehicule" class="form-label">Véhicule</label>
-                                {{ form.vehicule }}
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="conducteur" class="form-label">Conducteur</label>
-                                {{ form.conducteur }}
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="type_panne" class="form-label">Type de panne</label>
-                                <select class="form-select" name="type_panne" required>
-                                    <option value="Autre">Autre</option>
-                                    <option value="Mécanique">Mécanique</option>
-                                    <option value="Electrique">Electrique</option>
-                                    <option value="Pneumatique">Pneumatique</option>
-                                    <option value="Carrosserie">Carrosserie</option>
-                                    <option value="Système de freinage">Système de freinage</option>
-                                    <option value="Système de transmission">Système de transmission</option>
-                                    <option value="Climatisation">Climatisation</option>
-                                    <option value="Système de refroidissement">Système de refroidissement</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="commentaire" class="form-label">Commentaire</label>
-                            <textarea class="form-control" name="commentaire" rows="3"></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Créer</button>
-                        </div>
-                    </form>
+        <div class="row column_title">
+            <div class="col-md-12">
+                <div class="page_title">
+                    <h2>Gestion des Pannes </h2>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="add_panne_form white_shd">
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+
+                    <div class="form-group col-md-4">
+                        <label for="{{ form.vehicule.id_for_label }}">Véhicule:</label>
+                        {{ form.vehicule }}
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="{{ form.conducteur.id_for_label }}">Conducteur:</label>
+                        {{ form.conducteur }}
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="date_fin_intervention">Date de fin :</label>
+                        <input type="datetime-local" class="form-control" id="date_fin_intervention" name="date_fin_intervention" required>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="id_type_panne" class="form-label">Type de Panne:</label>
+                        {{ form.type_panne }}
+                    </div>
+
+                 
+
+                    <div class="form-group col-md-4">
+                        <label for="id_commentaire" class="form-label">Commentaire:</label>
+                        {{ form.commentaire }}
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="id_description" class="form-label">Description:</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="statut" class="form-label">Statut</label><br>
+                        
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="statut" id="en_cours" value="En cours">
+                            <label class="form-check-label" for="en_cours">En cours</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="statut" id="resolue" value="Résolue">
+                            <label class="form-check-label" for="resolue">Résolue</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary">Créer</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styles pour le formulaire */
+    .add_panne_form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .add_panne_form h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Styles pour les étiquettes de formulaire */
+    .add_panne_form label {
+        font-weight: bold;
+    }
+
+    /* Styles pour les champs de formulaire */
+    .add_panne_form .form-group input[type="text"],
+    .add_panne_form .form-group input[type="number"],
+    .add_panne_form .form-group select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /* Styles pour le champ de fichier (input type="file") */
+    .add_panne_form .form-group input[type="file"] {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 15px;
+    }
+
+    /* Styles pour le bouton "Enregistrer" */
+    .add_panne_form .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+    }
+
+    /* Styles pour le bouton "Retour à la liste des véhicules" */
+    .add_panne_form .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+        margin-top: 10px;
+    }
+</style>
 {% endblock %}

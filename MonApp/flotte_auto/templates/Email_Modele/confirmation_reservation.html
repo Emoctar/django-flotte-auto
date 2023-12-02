@@ -1,0 +1,95 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation validée</title>
+    <!-- Ajoutez ici les liens vers les styles Bootstrap ou d'autres styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Ajoutez ici vos styles personnalisés pour le courriel */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Ajoutez d'autres styles selon vos besoins */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Réservation validée</h1>
+
+        
+       
+        {% comment %} <img src="{% static 'style/images/logo/logo_icon.png' %}" alt="MyFleet Logo"> {% endcomment %}
+
+
+        <p>Votre réservation a été validée avec succès.</p>
+
+        <!-- Utilisez un tableau pour structurer les détails de la réservation -->
+        <table>
+            <tr>
+                <th>Date de début</th>
+                <td>{{ reservation.date_debut }}</td>
+            </tr>
+            <tr>
+                <th>Date de fin</th>
+                <td>{{ reservation.date_fin }}</td>
+            </tr>
+            <tr>
+                <th>Destination</th>
+                <td>{{ reservation.destination }}</td>
+            </tr>
+            <tr>
+                <th>Motif</th>
+                <td>{{ reservation.motif }}</td>
+            </tr>
+        </table>
+
+        <!-- Ajoutez ici les détails des véhicules réservés -->
+        <p>Véhicules réservés :</p>
+        <ul>
+            {% for vehicule in vehicules_reserves %}
+                <li>
+                    Marque : {{ vehicule.marque }}, Modèle : {{ vehicule.modele }}, Plaque d'immatriculation : {{ vehicule.numéro_immatriculation }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>

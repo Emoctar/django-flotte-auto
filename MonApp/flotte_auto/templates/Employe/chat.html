@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container">
+    <h2>Communication en temps réel</h2>
+
+    <!-- Affichage des messages -->
+    <div id="message-container" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+      <!-- Les messages seront affichés ici -->
+    </div>
+
+    <!-- Formulaire d'envoi de messages -->
+    <form id="chat-form" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="message">Message:</label>
+        <input type="text" class="form-control" id="message" name="message" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/chat/{{ user_id }}/'
+      );
+
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+
+        // Affichage du message dans le conteneur
+        const messageContainer = document.getElementById('message-container');
+        messageContainer.innerHTML += `<p><strong>${data.sender_name}:</strong> ${data.message}</p>`;
+
+        // Défilement vers le bas pour afficher le dernier message
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      };
+
+      // Envoi du message lorsque le formulaire est soumis
+      document.getElementById('chat-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const messageInput = document.getElementById('message');
+        const message = messageInput.value.trim();
+
+        if (message !== '') {
+          chatSocket.send(JSON.stringify({
+            'message': message,
+          }));
+
+          // Effacer le champ de saisie après l'envoi du message
+          messageInput.value = '';
+        }
+      });
+    });
+  </script>
+{% endblock %}

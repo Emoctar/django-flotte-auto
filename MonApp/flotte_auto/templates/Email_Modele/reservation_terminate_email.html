@@ -1,0 +1,68 @@
+<!-- templates/reservation_terminate_email.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation terminée</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 20px;
+            background-color: #f8f8f8; /* Ajout d'une couleur de fond légère */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff; /* Ajout d'une couleur de fond pour le contenu */
+            border-radius: 8px; /* Ajout d'une bordure arrondie */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre légère */
+        }
+
+        h1 {
+            color: #0066cc;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Réservation terminée</h1>
+        <p>
+            La réservation pour la voiture a été terminée.
+            Veuillez planifier une maintenance pour la ou les voitures suivantes :
+        </p>
+
+        <ul>
+            {% for vehicule in reservation.vehicules.all %}
+                <li>{{ vehicule }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <footer>
+        <p>Ceci est un message automatique. Veuillez ne pas répondre.</p>
+    </footer>
+</body>
+</html>

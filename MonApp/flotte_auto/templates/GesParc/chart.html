@@ -1,0 +1,122 @@
+{% extends "GesParc/home_GesParc.html" %}
+
+{% block content %}
+<style>
+    .map_section {
+        height: 300px;  /* Ajustez la hauteur selon vos besoins */
+    }
+</style>
+<div class="midde_cont">
+   <div class="container-fluid">
+      <!-- ... le reste de votre code ... -->
+
+      <div class="row column1">
+         <div class="col-lg-6">
+            <div class="white_shd full margin_bottom_30">
+               <div class="full graph_head">
+                  <div class="heading1 margin_0">
+                     <h2>Line Chart</h2>
+                  </div>
+               </div>
+               <div class="map_section padding_infor_info">
+                  <canvas id="moctar"></canvas>
+               </div>
+            </div>
+         </div>
+
+
+         <div class="row column1">
+            <div class="col-lg-6">
+               <div class="white_shd full margin_bottom_30">
+                  <div class="full graph_head">
+                     <div class="heading1 margin_0">
+                        <h2>Statistiques des Types de Pannes</h2>
+                     </div>
+                  </div>
+                  <div class="map_section padding_infor_info">
+                     <canvas id="panne_statistics_chart"></canvas>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <!-- ... d'autres parties de votre mise en page ... -->
+      </div>
+
+   </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+         // Utilisez les variables Django pour initialiser les données du graphique
+         var carLabels = {{ car_labels|safe }};
+         var carYears = {{ car_years|safe }};
+
+         // Créez le graphique avec les données du contexte
+         createChart('moctar', 'bar', 'moctar', carLabels , carYears);
+      });
+
+      // Fonction pour créer un graphique
+      function createChart(canvasId, chartType, chartLabel, labels, data) {
+         var ctx = document.getElementById(canvasId).getContext('2d');
+         new Chart(ctx, {
+            type: chartType,
+            data: {
+               labels: labels,
+               datasets: [{
+                  label: chartLabel,
+                  backgroundColor: window.chartColors.red,
+                  data: data
+               }]
+            },
+            options: {
+               responsive: true,
+               maintainAspectRatio: false
+            }
+         });
+      }
+   </script>
+   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Utilisez les variables Django pour initialiser les données du graphique
+        var panneStatistics = {{ panne_statistics|safe }};
+ 
+        // Créez le graphique avec les données du contexte
+        createPieChart('panne_statistics_chart', 'Statistiques des Types de Pannes', panneStatistics);
+     });
+ 
+     // Fonction pour créer un graphique à secteurs
+     function createPieChart(canvasId, chartLabel, data) {
+        var ctx = document.getElementById(canvasId).getContext('2d');
+        new Chart(ctx, {
+           type: 'pie',
+           data: {
+              labels: data.map(entry => entry.type_panne),
+              datasets: [{
+                 data: data.map(entry => entry.count),
+                 backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)',
+                    // Ajoutez plus de couleurs si nécessaire
+                 ]
+              }]
+           },
+           options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              title: {
+                 display: true,
+                 text: chartLabel
+              }
+           }
+        });
+     }
+   </script>
+   
+</div>
+{% endblock %}

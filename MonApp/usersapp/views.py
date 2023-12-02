@@ -70,8 +70,11 @@ class CustomPasswordResetView(PasswordResetView):
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from .decorateurs import gestionnaire_parc_required, employe_required, gestionnaire_intervention_required
 
-@login_required  # Utilisez cette décoration pour protéger l'accès aux pages de profil
+
+@login_required
+@gestionnaire_parc_required
 def gestionnaire_parc_profile(request):
     context = {
         'user': request.user  # Transmettez l'utilisateur connecté au modèle
@@ -80,23 +83,17 @@ def gestionnaire_parc_profile(request):
     return render(request, 'GesParc/Dashbord.html')
 
 @login_required
-def gestionnaire_consommation_profile(request):
-    # Logique spécifique au profil gestionnaire_consommation
-    return render(request, 'GesConsommation/profile.html')
-
-@login_required
+@employe_required
 def employe_profile(request):
     # Logique spécifique au profil employe
     return render(request, 'Employe/profile.html')
 
 @login_required
+@gestionnaire_intervention_required
 def gestionnaire_intervention_profile(request):
     # Logique spécifique au profil gestionnaire_intervention
     return render(request, 'GesIntervention/profile.html')
 
-# class CustomLogoutView(LogoutView):
-#     # Vous pouvez personnaliser la vue de déconnexion ici si nécessaire
-#     pass
 
 
 

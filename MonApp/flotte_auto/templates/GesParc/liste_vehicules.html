@@ -40,6 +40,7 @@
                                     <th>Modèle</th>
                                     <th>Année de Fabrication</th>
                                     <th>Kilométrage</th>
+                                    <th>Assurance</th>
                                     <th>Statut</th>
                                     <th>Actions</th>
                                 </tr>
@@ -52,6 +53,7 @@
                                     <td>{{ vehicule.modele }}</td>
                                     <td>{{ vehicule.annee_fabrication }}</td>
                                     <td>{{ vehicule.kilometrage }}</td>
+                                    <td>{{ vehicule.assurance }}</td>
                                     <td>
                                         {% if vehicule.statut == 'Disponible' %}
                                         <span class="text-success">Disponible</span>
@@ -72,9 +74,7 @@
                                     
                                     <td>
                                         <a href="{% url 'modifier_vehicule' vehicule.id %}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                                        <a href="{% url 'ajouter_assurance' vehicule.id %}" class="btn btn-primary btn-sm">
-                                            <i class="fa-solid fa-car-burst"></i>
-                                        </a>
+                                        
                                     </td>
                                     
                                 </tr>

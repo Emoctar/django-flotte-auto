@@ -152,7 +152,7 @@ class ConsommationCarburantForm(forms.ModelForm):
 class PanneForm(forms.ModelForm):
     class Meta:
         model = Panne
-        fields = ['vehicule', 'description', 'type_panne', 'commentaire','statut', 'conducteur']
+        fields = '__all__'
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'commentaire': forms.Textarea(attrs={'rows': 4}),

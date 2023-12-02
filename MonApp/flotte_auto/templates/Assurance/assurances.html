@@ -24,7 +24,7 @@
                     <div class="white_shd full margin_bottom_20">
                         <div class="full graph_head">
                             <div class="heading1 margin_0">
-                                <h2 >Gestion des Assurances pour {{ vehicule }}</h2>
+                                <h2 >Nouvelle Assurance</h2>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                         <div class="col-md-12">
                             <div class="container">
                                 <!-- Formulaire pour ajouter une nouvelle assurance -->
-                                <form method="post" action="{% url 'ajouter_assurance' vehicule.id %}">
+                                <form method="post">
                                     {% csrf_token %}
                                     <div class="form-group mt-4">
                                         <label for="compagnie_assurance">Compagnie d'assurance :</label>
