@@ -57,9 +57,14 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="id_vehicule">Véhicule :</label>
-                    {{form.vehicule}}
-                  </div>
+                    <label for="{{ form.vehicule.id_for_label }}">Véhicule :</label>
+                    <select class="form-control" id="{{ form.vehicule.id_for_label }}" name="{{ form.vehicule.name }}">
+                        {% for vehicule in vehicules %}
+                            <option value="{{ vehicule.id }}">{{ vehicule.marque }} {{ vehicule.modele }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
 
                 <div class="form-group">
                     <label for="id_date_maintenance">Date de Maintenance :</label>

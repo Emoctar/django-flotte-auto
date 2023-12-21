@@ -1,0 +1,226 @@
+{% extends 'GesParc/home_GesParc.html' %}
+
+{% block content %}
+<head>
+    <style type="text/css">
+        body {
+            margin: 0;
+            color: #2e323c;
+            background: #f5f6fa;
+            position: relative;
+            height: 100%;
+        }
+
+        .account-settings .user-profile {
+            margin: 0 0 1rem 0;
+            padding-bottom: 1rem;
+            text-align: center;
+        }
+
+       
+        .account-settings .user-profile .user-avatar {
+            margin: 0 0 1rem 0;
+        }
+
+        .account-settings .user-profile .user-avatar img {
+            width: 90px;
+            height: 90px;
+            -webkit-border-radius: 100px;
+            -moz-border-radius: 100px;
+            border-radius: 100px;
+        }
+
+        .account-settings .user-profile h5.user-name {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .account-settings .user-profile h6.user-email {
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #9fa8b9;
+        }
+
+        .account-settings .about {
+            margin: 2rem 0 0 0;
+            text-align: center;
+        }
+
+        .account-settings .about h5 {
+            margin: 0 0 15px 0;
+            color: #007ae1;
+        }
+
+        .account-settings .about p {
+            font-size: 0.825rem;
+        }
+
+        .form-control {
+            border: 1px solid #cfd1d8;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            font-size: .825rem;
+            background: #ffffff;
+            color: #2e323c;
+        }
+
+        .card {
+            background: #ffffff;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            border: 0;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="midde_cont">
+        <div class="container-fluid">
+            <div class="row column_title">
+                <div class="col-md-12">
+                    <div class="page_title">
+                        <h2>Mon Profil</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row gutters">
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="account-settings">
+                                    <div class="user-profile">
+                                        <div class="user-avatar">
+                                            <div class="col-sm-10">
+                                                {% if form.instance.photo %}
+                                                    <img src="{{ form.instance.photo.url }}" alt="GestionnaireParc">
+                                                {% else %}
+                                                    <!-- Ajoutez une image par défaut si aucune photo n'est présente -->
+                                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="GestionnaireParc">
+                                                {% endif %}
+                                                {{ form.photo }}
+                                            </div>
+                                        </div>
+                                        <h5 class="user-name">{{ user.get_full_name }}</h5>
+                                    </div>
+                                    <div class="about">
+                                        <h5>Infos:</h5>
+                                        <ul class="list-unstyled">
+                                            <li><i class="fa-regular fa-envelope"></i> : {{ user.email }}</li>
+                                            <li><i class="fa fa-phone"></i> : {{ form.instance.telephone }}</li>
+                                            <li><i class="fa-solid fa-location-dot"></i> : {{ form.instance.adresse }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <form enctype="multipart/form-data" method="post" action="{% url 'update_profile' %}">
+                                    {% csrf_token %}
+                                    <div class="row gutters">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <h6 class="mb-2 text-primary">Informations Personnelles</h6>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                {{ user_form.first_name.label_tag }}
+                                                <input type="text" class="form-control" id="{{ user_form.first_name.id_for_label }}" name="{{ user_form.first_name.name }}" value="{{ user_form.first_name.value }}" placeholder="{{ user_form.first_name.label }}" >
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="{{ user_form.last_name.id_for_label }}">Nom :</label>
+                                                <input type="text" class="form-control" id="{{ user_form.last_name.id_for_label }}" name="{{ user_form.last_name.name }}" value="{{ user_form.last_name.value }}" placeholder="Entrez votre nom" >
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="{{ form.telephone.id_for_label }}">Telephone</label>
+                                                <input type="number" class="form-control" id="{{form.telephone.id_for_label}}"  name="{{ form.telephone.name }}" value="{{ form.telephone.value }}" placeholder="Entrez votre numero">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="{{ form.adresse.id_for_label }}">Adresse</label>
+                                                <input type="text" class="form-control" id="{{ form.adresse.id_for_label }}" placeholder="Entrez votre adresse" name="{{ form.adresse.name }}" value="{{ form.adresse.value }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <label for="{{ user_form.email.id_for_label }}">Email</label>
+                                                <input type="email" class="form-control" id="{{ user_form.email.id_for_label }}" placeholder="Entrez votre email ID" name="{{ user_form.email.name }}" value="{{ user_form.email.value }}" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row gutters">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <h6 class="mt-3 mb-2 text-primary">Mot de Passe</h6>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="{{ password_form.old_password.id_for_label }}">Ancien mot de passe :</label>
+                                                <input type="password" class="form-control" id="{{ password_form.old_password.id_for_label }}" name="{{ password_form.old_password.name }}" placeholder="Ancien mot de passe" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="{{ password_form.new_password1.id_for_label }}">Nouveau mot de passe :</label>
+                                                <input type="password" class="form-control" id="{{ password_form.new_password1.id_for_label }}" name="{{ password_form.new_password1.name }}" placeholder="Nouveau mot de passe" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="{{ password_form.new_password2.id_for_label }}" >Confirmer le nouveau mot de passe :</label>
+                                                <input type="password" class="form-control" id="{{ password_form.new_password2.id_for_label }}" name="{{ password_form.new_password2.name }}" placeholder="Confirmer le nouveau mot de passe" required>
+                                            </div>
+                                        </div>
+                                        
+                                      
+                                        <div class="row gutters">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                <div class="text-right">
+                                                    <button type="button" id="cancel" name="cancel" class="btn btn-secondary">Cancel</button>
+                                                    <button type="submit" id="submit" name="submit" class="btn btn-primary" onclick="showSuccessMessage()">Update</button>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <!-- Ajout d'une div pour afficher le message de succès -->
+                                        <div id="success-message" class="alert alert-success" style="display: none;">
+                                            Le formulaire a été soumis avec succès! Redirection en cours...
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        {% comment %} <!-- Votre script JavaScript ici -->
+        <script>
+            // Fonction pour afficher le message de succès et rediriger après 3 secondes
+            function showSuccessMessage() {
+                document.getElementById("success-message").style.display = "block";
+                setTimeout(function () {
+                    document.getElementById("success-message").style.display = "none";
+                    // Redirection après 3 secondes
+                    document.getElementById("updateProfileForm").submit();
+                }, 3000);
+            }
+        </script> {% endcomment %}
+    </body>
+    </html>
+    {% endblock %}
+    

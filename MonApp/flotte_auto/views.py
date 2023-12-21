@@ -9,11 +9,26 @@ from .utils import*
 
 
 
-# #page erreur
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
-# def custom_page_not_found(request, exception):
-#     return render(request, 'page_erreur/404.html', status=404)
+
+def render_to_pdf(template_path, context_dict):
+    template = get_template(template_path)
+    html = template.render(context_dict)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="MonPDF.pdf"'
+
+    pisa_status = pisa.CreatePDF(
+        html, dest=response, encoding='utf-8'
+    )
+
+    if pisa_status.err:
+        return HttpResponse("Une erreur est survenue lors de la génération du PDF.")
+
+    return response
 
 # # #####################################################################
 # views.py
@@ -88,7 +103,8 @@ def creer_vehicule(request):
 def modifier_vehicule(request, vehicule_id):
     """Vue pour modifier les détails d'un véhicule existant."""
     vehicule = get_object_or_404(Vehicule, id=vehicule_id)
-
+    
+    assurances = Assurance.objects.all()
     if request.method == 'POST':
         form = VehiculeForm(request.POST,request.FILES, instance=vehicule)
         if form.is_valid():
@@ -96,7 +112,7 @@ def modifier_vehicule(request, vehicule_id):
             return redirect(reverse('modifier_vehicule', args=[vehicule_id]))
 
     form = VehiculeForm(instance=vehicule)
-    return render(request, 'GesParc/modifier_vehicule.html', {'form': form, 'vehicule': vehicule})
+    return render(request, 'GesParc/modifier_vehicule.html', {'form': form, 'vehicule': vehicule,'assurances': assurances})
 
 @login_required
 def supprimer_vehicule(request, vehicule_id):
@@ -399,6 +415,7 @@ def liste_toutes_reservations(request):
     }
 
     return render(request, 'GesParc/all_reservation.html', context)
+
 @login_required
 def details_reservation(request, reservation_id):
     reservation = get_object_or_404(ReservationVoiture, id=reservation_id)
@@ -415,6 +432,7 @@ def details_reservation(request, reservation_id):
         'demandeur': demandeur,
         'vehicules_reserves': vehicules_reserves,
     }
+    
 
     return render(request, 'GesParc/details_reservation.html', context)
 
@@ -425,7 +443,7 @@ def historique_reservations(request):
     context = {
         'reservations': reservations
     }
-
+    
     return render(request, 'Employe/historique_reservations.html', context)
 
 
@@ -436,6 +454,7 @@ def historique_reservations(request):
 #ENTRETIEN
 @login_required
 def ajouter_maintenance(request):
+    vehicules = Vehicule.objects.all()
     if request.method == 'POST':
         form = MaintenanceForm(request.POST)
         if form.is_valid():
@@ -467,7 +486,7 @@ def ajouter_maintenance(request):
     else:
         form = MaintenanceForm()
     
-    return render(request, 'GesIntervention/ajouter_maintenance.html', {'form': form})
+    return render(request, 'GesIntervention/ajouter_maintenance.html', {'form': form, 'vehicules': vehicules})
 
 @login_required
 def modifier_maintenance(request, maintenance_id):
@@ -496,7 +515,7 @@ def supprimer_maintenance(request, maintenance_id):
     return render(request, 'GesIntervention/supprimer_maintenance.html', {'maintenance': maintenance})
 
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 @login_required
 
@@ -557,47 +576,6 @@ def liste_maintenance(request):
     return render(request, 'GesIntervention/liste_maintenance.html', {'maintenances': maintenances})
 
 
-#ITINERAIRE
-
-# def creer_itineraire(request):
-#     if request.method == 'POST':
-#         form = ItineraireForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('liste_itineraires')
-#     else:
-#         form = ItineraireForm()
-    
-#     vehicules = Vehicule.objects.all()
-#     conducteurs = Conducteur.objects.all()
-#     return render(request, 'creer_itineraire.html', {'form': form, 'vehicules': vehicules, 'conducteurs': conducteurs})
-
-# def modifier_itineraire(request, itineraire_id):
-#     itineraire = get_object_or_404(Itineraire, id=itineraire_id)
-
-#     if request.method == 'POST':
-#         form = ItineraireForm(request.POST, instance=itineraire)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('liste_itineraires')
-
-#     form = ItineraireForm(instance=itineraire)
-#     vehicules = Vehicule.objects.all()
-#     conducteurs = Conducteur.objects.all()
-#     return render(request, 'modifier_itineraire.html', {'form': form, 'itineraire': itineraire, 'vehicules': vehicules, 'conducteurs': conducteurs})
-
-# def supprimer_itineraire(request, itineraire_id):
-#     itineraire = get_object_or_404(Itineraire, id=itineraire_id)
-    
-#     if request.method == 'POST':
-#         itineraire.delete()
-#         return redirect('liste_itineraires')
-
-#     return render(request, 'supprimer_itineraire.html', {'itineraire': itineraire})
-
-# def liste_itineraires(request):
-#     itineraires = Itineraire.objects.all()
-#     return render(request, 'liste_itineraires.html', {'itineraires': itineraires})
 
 # ############################################################
 
@@ -624,13 +602,13 @@ def noter_conducteur(request, conducteur_id):
 
 
 
-
+from django.db.models import F
 @login_required
-
 def enregistrer_donnees_consommation(request, reservation_id):
     try:
         reservation = ReservationVoiture.objects.get(id=reservation_id)
         vehicules = Vehicule.objects.all()
+
         if request.method == 'POST':
             form = ConsommationCarburantForm(request.POST)
             if form.is_valid():
@@ -641,6 +619,10 @@ def enregistrer_donnees_consommation(request, reservation_id):
                 vehicule = form.cleaned_data['vehicule']
                 taux_consommation = vehicule.consommation_moyenne()
                 print(f"Le taux de consommation pour le véhicule {vehicule.id} est {taux_consommation}")
+
+                # Mise à jour du kilométrage du véhicule
+                distance_parcourue = form.cleaned_data['distance_parcourue']
+                Vehicule.objects.filter(id=vehicule.id).update(kilometrage=F('kilometrage') + distance_parcourue)
 
                 return redirect('liste_donnees_consommation_carburant')
             else:
@@ -701,32 +683,7 @@ def suivi_consommation(request):
     }
     return render(request, 'GesParc/suivi_consommation.html', context)
 
-from django.http import JsonResponse,HttpResponse
 
-# def suivi_consommation(request):
-#     if request.method == 'POST':
-#         # Traitez les données de formulaire et calculez le taux de consommation
-#         form = SearchForm(request.POST)
-#         if form.is_valid():
-#             start_date = form.cleaned_data['start_date']
-#             end_date = form.cleaned_data['end_date']
-#             vehicle = form.cleaned_data['vehicle']
-
-#             if vehicle:
-#                 consumption_rate = vehicle.consommation_moyenne(start_date, end_date)
-#             else:
-#                 # Calculer la moyenne de consommation pour tous les véhicules
-#                 vehicles = Vehicule.objects.all()
-#                 total_consumption_rate = sum(vehicle.consommation_moyenne(start_date, end_date) for vehicle in vehicles)
-#                 consumption_rate = total_consumption_rate / len(vehicles) if vehicles else 0
-
-#             return JsonResponse({'consumption_rate': consumption_rate})
-
-#         return HttpResponse(status=400)  # Bad Request
-
-#     # Le reste de la logique de vue, par exemple la création d'un formulaire et l'affichage de la page
-#     form = SearchForm()
-#     return render(request, 'GesParc/suivi_consommation.html', {'form': form})
 
 # ############################################################
 #COUT
@@ -919,6 +876,7 @@ def ma_vue(request):
 
 @login_required
 def creer_panne(request):
+    
     if request.method == 'POST':
         form = PanneForm(request.POST)
         if form.is_valid():
@@ -975,5 +933,7 @@ def liste_pannes(request):
 
 
 # views.py
+# views.py
+
 # views.py
 

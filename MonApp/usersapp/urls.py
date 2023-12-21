@@ -18,6 +18,14 @@ urlpatterns =[
     
     path('employe_profile/', views.employe_profile, name='employe_profile'),
     path('gestionnaire_intervention_profile/', views.gestionnaire_intervention_profile, name='gestionnaire_intervention_profile'),
+    
+    path('update_profile/', views.update_profile, name='update_profile'),
+    
+    
+    # path('view_profile/', views.view_profile, name='view_profile'),
+    # path('edit_profile/', views.UserProfileUpdateView.as_view(), name='edit_profile'),
+    #  path('edit_profile/parc/', views.GestionnaireParcUpdateView.as_view(), name='edit_gestionnaire_parc_profile'),
+    # path('edit_profile/intervention/',views. GestionnaireInterventionUpdateView.as_view(), name='edit_gestionnaire_intervention_profile'),
 ]
 
 

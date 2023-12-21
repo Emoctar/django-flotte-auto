@@ -97,7 +97,8 @@ urlpatterns = [
     path('gestionnaire_intervention_profile/supprimer_panne/<int:panne_id>/', views.supprimer_panne, name='supprimer_panne'),
     path('gestionnaire_intervention_profile/liste_pannes/', views.liste_pannes, name='liste_pannes'),
 
-      
+
+   
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

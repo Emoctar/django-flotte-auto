@@ -170,29 +170,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-import redis
-
-# Configuration de Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Exemple avec Redis
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Exemple avec Redis
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
-# Configuration de Celery Beat
-from celery.schedules import crontab
-CELERY_BEAT_SCHEDULE = {
-    'mettre-a-jour-statut-vehicules': {
-        'task': 'flotte_auto.tasks.mettre_a_jour_statut_vehicules_task',
-        'schedule': crontab(hour=0, minute=0),  # Exécutez tous les jours à minuit
-    },
-}
-CELERY_BEAT_SCHEDULE = {
-    'notifier-entretien-planifie': {
-        'task': 'flotte_auto.tasks.notifier_entretien_planifie',
-        'schedule': crontab(hour=8, minute=0),  # Exécutez tous les jours à 8h00
-    },
-}
 
 
 # Default primary key field type
@@ -210,19 +187,24 @@ LOGIN_REDIRECT_URL = 'home'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+GES_PARC__EMAIL_HOST = 'smtp.gmail.com'
+GES_PARC__EMAIL_PORT = 587
+GES_PARC__EMAIL_USE_TLS = True
+GES_PARC_EMAIL_HOST_USER = 'moctardiallo1916@gmail.com'  # Votre adresse e-mail Gmail
+GES_PARC_HOST_PASSWORD = 'nqwswjgtsbxsbudb' 
+ # Remplacez par le mot de passe d'administration
+
+
+
+
+
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  # Port SMTP de Gmail
 EMAIL_USE_TLS = True  # Utilisez TLS pour la sécurité
-EMAIL_HOST_USER = 'moctardiallo1916@gmail.com'  # Votre adresse e-mail Gmail
-EMAIL_HOST_PASSWORD = 'nqwswjgtsbxsbudb'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
-
-
-# Paramètres pour le compte d'administration (utilisé pour la création de comptes)
-ADMIN_EMAIL_HOST = 'smtp.gmail.com'
-ADMIN_EMAIL_PORT = 587
-ADMIN_EMAIL_USE_TLS = True
-ADMIN_EMAIL_HOST_USER = 'a.myfleet03@gmail.com'  # Remplacez par l'adresse e-mail d'administration
-ADMIN_EMAIL_HOST_PASSWORD = 'srggwnaegjbgvdme'  # Remplacez par le mot de passe d'administration
+EMAIL_HOST_USER ='a.myfleet03@gmail.com'  # Votre adresse e-mail Gmail
+EMAIL_HOST_PASSWORD = 'srggwnaegjbgvdme'  # Votre mot de passe Gmail ou un jeton d'application si vous avez activé l'authentification à deux facteurs
+DEFAULT_FROM_EMAIL = 'a.myfleet03@gmail.com' 
 
 
 #######################################

@@ -5,6 +5,12 @@ from django.core.exceptions import ValidationError
 
 from .models import *
 
+# forms.py
+
+
+
+
+
 
 # class DonnéesConsommationCarburantForm(forms.ModelForm):
 #     class Meta:
@@ -64,21 +70,27 @@ class ReservationVoitureForm(forms.ModelForm):
 
         return vehicules
 
+# class EmployeForm(forms.ModelForm):
+#     class Meta:
+#         model = Employé
+#         fields = '__all__'
+#     photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
 
 
-
-
-
-
-
-
-class GestionnaireParcForm(forms.ModelForm):
-    class Meta:
-        model = GestionnaireParc
-        fields = '__all__'
-    photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+# class GestionnaireParcForm(forms.ModelForm):
+#     class Meta:
+#         model = GestionnaireParc
+#         fields = '__all__'
+#     photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
     
-    
+
+# class GestionnaireInterventionForm(forms.ModelForm):
+#     class Meta:
+#         model = GestionnaireIntervention
+#         fields = '__all__'
+#     photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))    
+        
+
 
 class GestionnaireConsommationForm(forms.ModelForm):
     class Meta:
@@ -86,12 +98,7 @@ class GestionnaireConsommationForm(forms.ModelForm):
         fields = '__all__'
     photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
     
-class GestionnaireInterventionForm(forms.ModelForm):
-    class Meta:
-        model = GestionnaireIntervention
-        fields = '__all__'
-    photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))    
-        
+
         
 class ConducteurForm(forms.ModelForm):
     class Meta:

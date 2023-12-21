@@ -74,7 +74,56 @@
                             <div class="col-md-12">
                                 <form method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
-                                    {{ form.as_p }}
+                                    
+                                    <div class="form-group">
+                                        <label for="{{ form.compagnie_assurance.id_for_label }}">Assurance :</label>
+                                        <select class="form-control" id="{{ form.compagnie_assurance.id_for_label }}" name="{{ form.compagnie_assurance.name }}">
+                                            {% for assurance in assurances %}
+                                                <option value="{{ assurance.id }}" {% if vehicule.assurance.id == assurance.id %}selected{% endif %}>{{ assurance.compagnie_assurance }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    
+            
+                                    <div class="form-group">
+                                    <label for="id_marque">Marque :</label>
+                                        <input type="text" class="form-control" id="id_marque" name="marque" value="{{ vehicule.marque }}">
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <label for="id_modele">Modèle :</label>
+                                        <input type="text" class="form-control" id="id_modele" name="modele" value="{{ vehicule.modele }}">
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <label for="id_photo">Photo :</label>
+                                        <input type="file" class="form-control" id="id_photo" name="photo" value="{{ vehicule.photo }}>
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <label for="id_annee_fabrication">Année de fabrication :</label>
+                                        <input type="number" class="form-control" id="id_annee_fabrication" name="annee_fabrication" value="{{ vehicule.annee_fabrication }}">
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <label for="id_num_immatriculation">Numéro d'immatriculation :</label>
+                                        <input type="text" class="form-control" id="id_num_immatriculation" name="numéro_immatriculation" value="{{ vehicule.numéro_immatriculation }}">
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <label for="id_kilometrage">Kilométrage :</label>
+                                        <input type="number" class="form-control" id="id_kilometrage" name="kilometrage" value="{{ vehicule.kilometrage }}">
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <label for="id_typeCarburant">Type de carburant :</label>
+                                        <select class="form-control" id="id_typeCarburant" name="typeCarburant">
+                                            <option value="Gazoil" {% if vehicule.typeCarburant == 'Gazoil' %}selected{% endif %}>Gazoil</option>
+                                            <option value="Essence" {% if vehicule.typeCarburant == 'Essence' %}selected{% endif %}>Essence</option>
+                                        </select>
+                                    </div>
+            
                                     <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
                                 </form>
                                 <a href="{% url 'liste_vehicules' %}" class="btn btn-secondary mt-3">Retour à la liste des véhicules</a>
@@ -83,6 +132,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-md-6">
                 <!-- Image du véhicule -->
                 <div class="vehicle-image">

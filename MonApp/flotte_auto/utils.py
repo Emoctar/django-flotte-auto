@@ -9,7 +9,7 @@ def envoyer_sms(numero_destinataire, message):
     try:
         response = sms.send_message({
             'from': settings.VONAGE_PHONE_NUMBER,
-            'to': numero_destinataire,
+            'to': [numero_destinataire],
             'text': message,
         })
 
@@ -33,9 +33,10 @@ def envoyer_email_notification(sujet, message, destinataires):
     send_mail(
         sujet,
         message,  # Vous pouvez laisser le paramètre message vide
-        'moctardiallo1916@gmail.com',  # Remplacez par votre adresse e-mail expéditrice
+        settings.GES_PARC_EMAIL_HOST_USER,  # Remplacez par votre adresse e-mail expéditrice
         destinataires,
         fail_silently=False,
+       
         html_message=message  # Spécifiez le contenu HTML ici
     )
     

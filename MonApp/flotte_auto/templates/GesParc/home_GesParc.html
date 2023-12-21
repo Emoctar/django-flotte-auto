@@ -26,7 +26,7 @@
       <!-- responsive css -->
       <link rel="stylesheet" href="{%static 'style/css/responsive.css'%}" />
       <!-- color css -->
-      <link rel="stylesheet" href="{%static 'style/css/colors.css'%}" />
+ 
       <!-- select bootstrap -->
       <link rel="stylesheet" href="{%static 'style/css/bootstrap-select.css'%}" />
       <!-- scrollbar css -->
@@ -34,7 +34,7 @@
       <!-- custom css -->
       <link rel="stylesheet" href="{%static 'style/css/custom.css'%}" />
       <!-- calendar file css -->
-      <link rel="stylesheet" href="{%static 'style/js/semantic.min.css'%}" />
+   
       <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -137,7 +137,7 @@
                                  <li>
                                     <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{ user.gestionnaireparc.photo.url }}" alt="#" /><span class="name_user">{{user.get_full_name}}</span></a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="#">Mon Profile</a>
+                                       <a class="dropdown-item" href="{%url 'update_profile'%}">Mon Profil</a>
                                        
                                        <a class="dropdown-item" href="{%url 'logout'%}"><span>Deconnexion</span> <i class="fa fa-sign-out"></i></a>
                                     </div>
@@ -166,14 +166,12 @@
       </div>
       <!-- jQuery -->
       <script src="{%static 'style/js/jquery.min.js'%}"></script>
-      <script src="{%static 'style/js/popper.min.js'%}"></script>
+    
       <script src="{%static 'style/js/bootstrap.min.js'%}"></script>
       <!-- wow animation -->
       <script src="{%static 'style/js/animate.js'%}"></script>
-      <!-- select country -->
-      <script src="{%static 'style/js/bootstrap-select.js'%}"></script>
-      <!-- owl carousel -->
-      <script src="{%static 'style/js/owl.carousel.js'%}"></script> 
+ 
+   
       <!-- nice scrollbar -->
       <script src="{%static 'style/js/perfect-scrollbar.min.js'%}"></script>
       <!-- custom js -->
@@ -181,10 +179,7 @@
    
 
             <!-- chart js -->
-            <script src="{%static 'style/js/Chart.min.js'%}"></script>
-            <script src="{%static 'style/js/Chart.bundle.min.js'%}"></script>
-            <script src="{%static 'style/js/utils.js'%}"></script>
-            <script src="{%static 'style/js/analyser.js'%}"></script>
+
             <!-- nice scrollbar -->
             <script src="{%static 'style/js/perfect-scrollbar.min.js'%}"></script>
             <script>
