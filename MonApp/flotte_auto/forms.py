@@ -5,40 +5,6 @@ from django.core.exceptions import ValidationError
 
 from .models import *
 
-# forms.py
-
-
-
-
-
-
-# class DonnéesConsommationCarburantForm(forms.ModelForm):
-#     class Meta:
-#         model = DonnéesConsommationCarburant
-#         fields = '__all__'  # Vous pouvez personnaliser les champs ici si nécessaire
-
-
-
-class NotificationForm(forms.ModelForm):
-    class Meta:
-        model = Notification
-        fields = '__all__'  # Vous pouvez personnaliser les champs ici si nécessaire
-
-
-
-
-class CoutForm(forms.ModelForm):
-    class Meta:
-        model = Cout
-        fields = '__all__'  # Vous pouvez personnaliser les champs ici si nécessaire
-
-
-
-class ItineraireForm(forms.ModelForm):
-    class Meta:
-        model = Itineraire
-        fields = '__all__'
-
 
 class MaintenanceForm(forms.ModelForm):
     class Meta:
@@ -117,12 +83,7 @@ class VehiculeForm(forms.ModelForm):
         
 
 
-class NoteConducteurForm(forms.ModelForm):
-    class Meta:
-        model = PerformanceConduite
-        fields = ['note', 'commentaire']
-        
-        
+
 
 
 class AssuranceForm(forms.ModelForm):

@@ -53,7 +53,7 @@
                                     <td>{{ maintenance.prochaine_maintenance }}</td>
                                     <td>
                                         <a href="{% url 'terminer_maintenance' maintenance.id %}" class="btn btn-success btn-sm">
-                                            Terminer
+                                            <i class="fas fa-check"></i>
                                         </a>
                                         <a href="{% url 'modifier_maintenance' maintenance.id %}" class="btn btn-primary btn-sm">
                                             <i class="fas fa-info-circle"></i> 

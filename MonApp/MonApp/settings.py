@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-*ykwsv-+lgvgh^r6o5)0&way!97=^#)k=iij@%i4rtbs8dd_v=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'flotte_auto',
     'usersapp',
     'sql_server.pyodbc',
+    
     
     
 ]
@@ -101,7 +102,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'flotte_auto',
-        'USER': 'admin',
+        'USER': 'fleetauto',
         'PASSWORD': 'Redefere72',
         'HOST': 'MOCTAR\EMD_SERVER',  # Remplacez par le nom ou l'adresse IP de votre serveur SQL Server
         'PORT': '',           # Laissez vide pour utiliser le port par défaut (généralement 1433)
@@ -185,15 +186,6 @@ LOGIN_REDIRECT_URL = 'home'
 
 # simuler l’envoi d’e-mail de réinitialisation de mot de passe sur console.
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-GES_PARC__EMAIL_HOST = 'smtp.gmail.com'
-GES_PARC__EMAIL_PORT = 587
-GES_PARC__EMAIL_USE_TLS = True
-GES_PARC_EMAIL_HOST_USER = 'moctardiallo1916@gmail.com'  # Votre adresse e-mail Gmail
-GES_PARC_HOST_PASSWORD = 'nqwswjgtsbxsbudb' 
- # Remplacez par le mot de passe d'administration
-
 
 
 

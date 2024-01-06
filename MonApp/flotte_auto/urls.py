@@ -17,9 +17,7 @@ urlpatterns = [
   
    
   
-   path('gestionnaire_parc_profile/votre_vue/', views.votre_vue, name='votre_vue'),
-    # Ajoutez d'autres URL au besoin
-   
+  
  
     
     path('', views.index, name='index'),
@@ -48,7 +46,7 @@ urlpatterns = [
 
     
     path('employe_profile/liste_vehicules_disponible', views.liste_vehicules_disponible, name='liste_vehicules_disponible'),
-    path('employe_profile/noter/<int:conducteur_id>/', views.noter_conducteur, name='noter_conducteur'),
+   
     path('gestionnaire_parc_profile/gerer_reservations_attente/', views.gerer_reservations_attente, name='gerer_reservations_attente'),
     path('gestionnaire_parc_profile/valider_reservation/<int:reservation_id>/', views.valider_reservation, name='valider_reservation'),
     path('gestionnaire_parc_profile/refuser_reservation/<int:reservation_id>/', views.refuser_reservation, name='refuser_reservation'),
@@ -68,12 +66,7 @@ urlpatterns = [
     path('gestionnaire_parc_profile/liste_donnees_consommation_carburant/', views.liste_donnees_consommation_carburant, name='liste_donnees_consommation_carburant'),
     path('gestionnaire_parc_profile/suivi_consommation/', views.suivi_consommation, name='suivi_consommation'),
     
-    # Vues liées aux coûts
-    path('enregistrer_cout/', views.enregistrer_cout, name='enregistrer_cout'),
-    path('modifier_cout/<int:cout_id>/', views.modifier_cout, name='modifier_cout'),
-    path('supprimer_cout/<int:cout_id>/', views.supprimer_cout, name='supprimer_cout'),
-    path('liste_couts/', views.liste_couts, name='liste_couts'),
-
+   
  
       # Vues liées aux assurances
     path('gestionnaire_parc_profile/ajouter_assurance/', views.ajouter_assurance, name='ajouter_assurance'),

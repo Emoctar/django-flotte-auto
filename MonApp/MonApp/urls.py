@@ -19,9 +19,14 @@ from django.urls import path,include
 
 
 
+
+
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('',include('flotte_auto.urls')),
     path('', include('usersapp.urls')),
     
 ]
+

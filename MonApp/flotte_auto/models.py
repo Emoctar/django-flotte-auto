@@ -1,13 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
-# Create your models here.
-
-
-
-
-
 from django.db import models
 
 class Assurance(models.Model):
@@ -84,14 +77,7 @@ class Vehicule(models.Model):
                 return quantite_totale / distance_totale
         return 0 
     
-    # def calculer_taux_consommation_moyen(self, start_date, end_date):
-    #     consommations = ConsommationCarburant.objects.filter(vehicule=self, date__range=[start_date, end_date])
-    #     total_fuel = sum(consommation.quantite_carburant for consommation in consommations)
-    #     total_distance = sum(consommation.distance_parcourue for consommation in consommations)
-    #     if total_distance != 0:
-    #         return total_fuel / total_distance
-    #     else:
-    #         return 0
+  
         
     def en_maintenance(self):
         return self.maintenance_set.filter(vehicule=self, en_cours=True).exists()
@@ -239,39 +225,8 @@ class Conducteur(models.Model):
 
 
 
-class Itineraire(models.Model):
-    vehicule = models.ForeignKey(Vehicule, on_delete=models.CASCADE)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.CASCADE)
-    date_depart = models.DateTimeField()
-    date_arrivee = models.DateTimeField()
-    lieu_depart = models.CharField(max_length=255)
-    lieu_arrivee = models.CharField(max_length=255)
 
 
-
-class PerformanceConduite(models.Model):
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.CASCADE)
-    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)
-    note = models.IntegerField()
-    commentaire = models.TextField()
-
-class Notification(models.Model):
-    type_notification = models.CharField(max_length=255)
-    message = models.TextField()
-    date_envoi = models.DateTimeField()
-    destinataire = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-#modèle pour gérer les coûts liés à la flotte automobile, 
-# y compris les coûts d'acquisition, d'entretien, 
-# de carburant, d'assurance, etc.
-class Cout(models.Model):
-    vehicule = models.ForeignKey(Vehicule, on_delete=models.CASCADE)
-    type_cout = models.CharField(max_length=255)
-    montant = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateField()
-    description = models.TextField()
-    
     
     
 class ConsommationCarburant(models.Model):
@@ -281,14 +236,6 @@ class ConsommationCarburant(models.Model):
     quantite_carburant = models.DecimalField(max_digits=6, decimal_places=2)  # En litres
     distance_parcourue = models.DecimalField(max_digits=6, decimal_places=2)  # En kilomètres
   
-
-
-class NoteConducteur(models.Model):
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.CASCADE)
-    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)
-    note = models.IntegerField()
-    commentaire=models.TextField()
-    
 
 
 
@@ -326,8 +273,3 @@ class Panne(models.Model):
         
         
         
-class Message(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
